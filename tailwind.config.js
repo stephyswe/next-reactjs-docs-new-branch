@@ -6,14 +6,17 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('./colors');
 
 module.exports = {
-  content: ['./src/components/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './src/components/**/*.{js,ts,jsx,tsx}',
+    './src/pages/**/*.{js,ts,jsx,tsx}',
+  ],
+  darkMode: 'class',
   theme: {
     // Override base screen sizes
     screens: {
       ...defaultTheme.screens,
       betterhover: {raw: '(hover: hover)'},
     },
-
     extend: {
       fontFamily: {
         sans: [
@@ -27,10 +30,14 @@ module.exports = {
       },
       fontSize: {
         lg: '17px',
+        base: '15px',
         sm: '13px',
         xs: '11px',
       },
       colors,
+      gridTemplateColumns: {
+        'sidebar-content': '20rem auto',
+      },
     },
   },
   plugins: [],
