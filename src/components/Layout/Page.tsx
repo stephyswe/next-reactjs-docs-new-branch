@@ -3,11 +3,19 @@
  */
 
 import * as React from 'react';
+import {Footer} from './Footer';
 
-interface PageProps {
-  children: React.ReactNode;
-}
-
-export function Page({children}: PageProps) {
-  return <>Page{children}</>;
+export function Page() {
+  return (
+    <>
+      <div>
+        {/* No fallback UI so need to be careful not to suspend directly inside. */}
+        <React.Suspense fallback={null}>
+          <main className="min-w-0">
+            <Footer />
+          </main>
+        </React.Suspense>
+      </div>
+    </>
+  );
 }
