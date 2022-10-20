@@ -4,13 +4,19 @@
 
 import {Suspense} from 'react';
 import * as React from 'react';
+import {useRouter} from 'next/router';
 import {Nav} from './Nav';
 import {RouteItem, SidebarContext} from './useRouteMeta';
 import {Footer} from './Footer';
 import SocialBanner from '../SocialBanner';
 import sidebarHome from '../../sidebarHome.json';
 
-export function Page() {
+interface PageProps {
+  children: React.ReactNode;
+}
+
+export function Page({children}: PageProps) {
+  const {asPath} = useRouter();
   let routeTree = sidebarHome as RouteItem;
   return (
     <>
@@ -23,6 +29,10 @@ export function Page() {
           {/* No fallback UI so need to be careful not to suspend directly inside. */}
           <Suspense fallback={null}>
             <main className="min-w-0">
+            <div className="lg:hidden h-16 mb-2" />
+              <article className="break-words" key={asPath}>
+                {children}
+              </article>
               <Footer />
             </main>
           </Suspense>
