@@ -2,6 +2,7 @@
  * Copyright (c) Facebook, Inc. and its affiliates.
  */
 
+import {useContext, Suspense} from 'react';
 import * as React from 'react';
 import cn from 'classnames';
 import NextLink from 'next/link';
@@ -12,8 +13,11 @@ import {IconClose} from 'components/Icon/IconClose';
 import {IconHamburger} from 'components/Icon/IconHamburger';
 import {Search} from 'components/Search';
 import {useActiveSection} from 'hooks/useActiveSection';
-import NavLink from './NavLink';
 import {Logo} from '../../Logo';
+import NavLink from './NavLink';
+import {SidebarContext} from 'components/Layout/useRouteMeta';
+import {SidebarRouteTree} from '../Sidebar/SidebarRouteTree';
+import type {RouteItem} from '../useRouteMeta';
 
 declare global {
   interface Window {
@@ -91,6 +95,8 @@ export default function Nav() {
   const section = useActiveSection();
   const {asPath} = useRouter();
 
+  // In desktop mode, use the route tree for current route.
+  let routeTree: RouteItem = useContext(SidebarContext);
   // In mobile mode, let the user switch tabs there and back without navigating.
   // Seed the tab state from the router, but keep it independent.
   const [tab, setTab] = React.useState(section);
@@ -98,6 +104,10 @@ export default function Nav() {
   if (prevSection !== section) {
     setPrevSection(section);
     setTab(section);
+  }
+  // HACK. Fix up the data structures instead.
+  if ((routeTree as any).routes.length === 1) {
+    routeTree = (routeTree as any).routes[0];
   }
 
   // While the overlay is open, disable body scroll.
@@ -265,6 +275,15 @@ export default function Nav() {
             style={{'--bg-opacity': '.2'} as React.CSSProperties} // Need to cast here because CSS vars aren't considered valid in TS types (cuz they could be anything)
             className="w-full lg:h-auto grow pr-0 lg:pr-5 pt-6 lg:py-6 md:pt-4 lg:pt-4 scrolling-touch scrolling-gpu">
             {/* No fallback UI so need to be careful not to suspend directly inside. */}
+            <Suspense fallback={null}>
+              <SidebarRouteTree
+                // Don't share state between the desktop and mobile versions.
+                // This avoids unnecessary animations and visual flicker.
+                key={isOpen ? 'mobile-overlay' : 'desktop-or-hidden'}
+                routeTree={routeTree}
+                isForceExpanded={isOpen}
+              />
+            </Suspense>
             <div className="h-20" />
           </nav>
           <div className="fixed bottom-0 hidden lg:block">
