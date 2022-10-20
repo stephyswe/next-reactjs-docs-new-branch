@@ -5,12 +5,20 @@
 module.exports = {
   // Text colors
   primary: '#23272F', // gray-90
+  'primary-dark': '#F6F7F9', // gray-5
   secondary: '#404756', // gray-70
+  'secondary-dark': '#EBECF0', // gray-10
   link: '#087EA4', // blue-50
+  'link-dark': '#149ECA', // blue-40
+  syntax: '#EBECF0', // gray-10
   wash: '#FFFFFF',
+  'wash-dark': '#23272F', // gray-90
   highlight: '#E6F7FF', // blue-10
+  'highlight-dark': 'rgba(88,175,223,.1)',
+  'border-dark': '#343A46', // gray-80
   'secondary-button': '#EBECF0', // gray-10
-
+  
+  // Gray
+  'gray-80': '#343A46',
   'gray-30': '#99A1B3',
-  'gray-10': '#EBECF0',
 };
