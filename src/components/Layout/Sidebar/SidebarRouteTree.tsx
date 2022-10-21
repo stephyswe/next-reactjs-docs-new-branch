@@ -7,6 +7,7 @@ import cn from 'classnames';
 import {RouteItem} from 'components/Layout/useRouteMeta';
 import {useRouter} from 'next/router';
 import {removeFromLast} from 'utils/removeFromLast';
+import {useRouteMeta} from '../useRouteMeta';
 import {SidebarLink} from './SidebarLink';
 import useCollapse from 'react-collapsed';
 
@@ -73,12 +74,17 @@ export function SidebarRouteTree({
   routeTree,
   level = 0,
 }: SidebarRouteTreeProps) {
+  const {breadcrumbs} = useRouteMeta(routeTree);
   const cleanedPath = useRouter().asPath.split(/[\?\#]/)[0];
   const slug = cleanedPath;
   const currentRoutes = routeTree.routes as RouteItem[];
   const expandedPath = currentRoutes.reduce(
     (acc: string | undefined, curr: RouteItem) => {
       if (acc) return acc;
+      const breadcrumb = breadcrumbs.find((b) => b.path === curr.path);
+      if (breadcrumb) {
+        return curr.path;
+      }
       if (curr.path === cleanedPath) {
         return cleanedPath;
       }
