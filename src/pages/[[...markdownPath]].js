@@ -6,7 +6,6 @@ import {Fragment, useMemo} from 'react';
 import {MDXComponents} from 'components/MDX/MDXComponents';
 import {MarkdownPage} from 'components/Layout/MarkdownPage';
 import {Page} from 'components/Layout/Page';
-import {prepareMDX} from '../utils/prepareMDX';
 
 export default function Layout({content}) {
   const parsedContent = useMemo(
@@ -51,21 +50,23 @@ function reviveNodeOnClient(key, val) {
   }
 }
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ~~~~ IMPORTANT: BUMP THIS IF YOU CHANGE ANY CODE BELOW ~~~
-const DISK_CACHE_BREAKER = 7;
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 // Put MDX output into JSON for client.
 export async function getStaticProps(context) {
   const fs = require('fs');
+  const {
+    prepareMDX,
+  } = require('../utils/prepareMDX');
   const rootDir = process.cwd() + '/src/content/';
   const mdxComponentNames = Object.keys(MDXComponents);
 
   // Read MDX from the file.
   let path = (context.params.markdownPath || []).join('/') || 'index';
   let mdx;
-  mdx = fs.readFileSync(rootDir + path + '.md', 'utf8');
+  try {
+    mdx = fs.readFileSync(rootDir + path + '.md', 'utf8');
+  } catch {
+    mdx = fs.readFileSync(rootDir + path + '/index.md', 'utf8');
+  }
 
   // If we don't add these fake imports, the MDX compiler
   // will insert a bunch of opaque components we can't introspect.
@@ -142,8 +143,49 @@ export async function getStaticProps(context) {
 
 // Collect all MDX files for static generation.
 export async function getStaticPaths() {
+  const {promisify} = require('util');
+  const {resolve} = require('path');
+  const fs = require('fs');
+  const readdir = promisify(fs.readdir);
+  const stat = promisify(fs.stat);
+  const rootDir = process.cwd() + '/src/content';
+
+  // Find all MD files recursively.
+  async function getFiles(dir) {
+    const subdirs = await readdir(dir);
+    const files = await Promise.all(
+      subdirs.map(async (subdir) => {
+        const res = resolve(dir, subdir);
+        return (await stat(res)).isDirectory()
+          ? getFiles(res)
+          : res.slice(rootDir.length + 1);
+      })
+    );
+    return files.flat().filter((file) => file.endsWith('.md'));
+  }
+
+  // 'foo/bar/baz.md' -> ['foo', 'bar', 'baz']
+  // 'foo/bar/qux/index.md' -> ['foo', 'bar', 'qux']
+  function getSegments(file) {
+    let segments = file.slice(0, -3).replace(/\\/g, '/').split('/');
+    if (segments[segments.length - 1] === 'index') {
+      segments.pop();
+    }
+    return segments;
+  }
+
+  const files = await getFiles(rootDir);
+  const paths = files.map((file) => ({
+    params: {
+      markdownPath: getSegments(file),
+      // ^^^ CAREFUL HERE.
+      // If you rename markdownPath, update patches/next-remote-watch.patch too.
+      // Otherwise you'll break Fast Refresh for all MD files.
+    },
+  }));
+
   return {
-    paths: [{params: {markdownPath: []}}],
+    paths: paths,
     fallback: false,
   };
 }
