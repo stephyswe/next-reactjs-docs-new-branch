@@ -61,3 +61,14 @@ export const H2 = ({className, ...props}: HeadingProps) => (
     {...props}
   />
 );
+
+export const H3 = ({className, ...props}: HeadingProps) => (
+  <Heading
+    as="h3"
+    className={cn(
+      className,
+      'text-2xl leading-9 text-primary dark:text-primary-dark font-bold my-6'
+    )}
+    {...props}
+  />
+);
