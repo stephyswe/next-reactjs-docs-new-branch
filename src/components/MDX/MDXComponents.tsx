@@ -3,6 +3,7 @@
  */
 
 import * as React from 'react';
+import {H2} from './Heading';
 import HomepageHero from './HomepageHero';
 
 const P = (p: JSX.IntrinsicElements['p']) => (
@@ -11,6 +12,7 @@ const P = (p: JSX.IntrinsicElements['p']) => (
 
 export const MDXComponents = {
   p: P,
+  h2: H2,
   MaxWidth({children}: {children: any}) {
     return <div className="max-w-4xl ml-0 2xl:mx-auto">{children}</div>;
   },

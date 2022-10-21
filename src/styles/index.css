@@ -64,5 +64,17 @@
   html .no-bg-scrollbar::-webkit-scrollbar-track {
     background-color: transparent;
   }
+}
 
+.mdx-heading .mdx-header-anchor svg {
+  display: inline;
+}
+.mdx-heading .mdx-header-anchor svg {
+  visibility: hidden;
+}
+.mdx-heading:hover .mdx-header-anchor svg {
+  visibility: visible;
+}
+.mdx-heading .mdx-header-anchor:focus svg {
+  visibility: visible;
 }
