@@ -39,17 +39,21 @@
     font-display: swap;
   }
 
-    /* Write your own custom base styles here */
-    html {
-      color-scheme: light;
+  /* Write your own custom base styles here */
+  html {
+    color-scheme: light;
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
+  }
   
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      -webkit-tap-highlight-color: transparent;
-    }
-  
-    html.dark {
-      color-scheme: dark;
-    }
+  html.dark {
+    color-scheme: dark;
+  }
+
+  img {
+    max-width: calc(min(700px, 100%));
+  }
   
   /*
    * Hopefully when scrollbar-color lands everywhere,
