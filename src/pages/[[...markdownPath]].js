@@ -78,9 +78,11 @@ export async function getStaticProps(context) {
       .join('\n');
 
   // Turn the MDX we just read into some JS we can execute.
+  const {remarkPlugins} = require('../../plugins/markdownToHtml');
   const {compile: compileMdx} = await import('@mdx-js/mdx');
   const jsxCode = await compileMdx(mdxWithFakeImports, {
     remarkPlugins: [
+      ...remarkPlugins,
       (await import('remark-frontmatter')).default,
     ],
   });
