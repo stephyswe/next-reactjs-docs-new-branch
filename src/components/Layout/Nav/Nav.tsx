@@ -14,6 +14,7 @@ import {IconHamburger} from 'components/Icon/IconHamburger';
 import {Search} from 'components/Search';
 import {useActiveSection} from 'hooks/useActiveSection';
 import {Logo} from '../../Logo';
+import {Feedback} from '../Feedback';
 import NavLink from './NavLink';
 import {SidebarContext} from 'components/Layout/useRouteMeta';
 import {SidebarRouteTree} from '../Sidebar/SidebarRouteTree';
@@ -287,7 +288,7 @@ export default function Nav() {
             <div className="h-20" />
           </nav>
           <div className="fixed bottom-0 hidden lg:block">
-            {/* <Feedback /> */}
+            <Feedback />
           </div>
         </aside>
       </div>

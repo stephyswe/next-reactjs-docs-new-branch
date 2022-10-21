@@ -17,10 +17,13 @@ module.exports = {
   'card-dark': '#343A46', // gray-80
   highlight: '#E6F7FF', // blue-10
   'highlight-dark': 'rgba(88,175,223,.1)',
+  border: '#EBECF0', // gray-10
   'border-dark': '#343A46', // gray-80
   'secondary-button': '#EBECF0', // gray-10
+  'secondary-button-dark': '#404756', // gray-70
   
   // Gray
+  'gray-95': '#16181D',
   'gray-80': '#343A46',
   'gray-30': '#99A1B3',
 };
