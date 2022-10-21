@@ -7,6 +7,7 @@
 import {useRef, useEffect} from 'react';
 import * as React from 'react';
 import cn from 'classnames';
+import {IconNavArrow} from 'components/Icon/IconNavArrow';
 import Link from 'next/link';
 
 interface SidebarLinkProps {
@@ -14,6 +15,9 @@ interface SidebarLinkProps {
   selected?: boolean;
   title: string;
   level: number;
+  heading?: boolean;
+  isExpanded?: boolean;
+  hideArrow?: boolean;
 }
 
 export function SidebarLink({
@@ -21,6 +25,9 @@ export function SidebarLink({
   selected = false,
   title,
   level,
+  heading = false,
+  isExpanded,
+  hideArrow,
 }: SidebarLinkProps) {
   const ref = useRef<HTMLAnchorElement>(null);
 
@@ -71,6 +78,15 @@ export function SidebarLink({
           })}>
           {title}
         </span>
+        {isExpanded != null && !heading && !hideArrow && (
+          <span
+            className={cn('pr-1', {
+              'text-link': isExpanded,
+              'text-gray-30': !isExpanded,
+            })}>
+            <IconNavArrow displayDirection={isExpanded ? 'down' : 'right'} />
+          </span>
+        )}
       </a>
     </Link>
   );

@@ -122,6 +122,8 @@ export function SidebarRouteTree({
                 selected={selected}
                 level={level}
                 title={title}
+                isExpanded={isExpanded}
+                hideArrow={isForceExpanded}
               />
               <CollapseWrapper duration={250} isExpanded={isExpanded}>
                 <SidebarRouteTree
