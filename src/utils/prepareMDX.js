@@ -24,6 +24,7 @@ function wrapChildrenInMaxWidthContainers(children) {
   // a full-width section which interrupts it.
   let fullWidthTypes = [
     'Sandpack',
+    'FullWidth',
   ];
   let wrapQueue = [];
   let finalChildren = [];

@@ -15,7 +15,7 @@ export default function Layout({content, toc, meta}) {
   const parsedToc = useMemo(() => JSON.parse(toc, reviveNodeOnClient), [toc]);
   return (
     <Page toc={parsedToc}>
-      <MarkdownPage meta={meta}>
+      <MarkdownPage meta={meta} toc={parsedToc}>
         {parsedContent}
       </MarkdownPage>
     </Page>
@@ -53,11 +53,17 @@ function reviveNodeOnClient(key, val) {
   }
 }
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~ IMPORTANT: BUMP THIS IF YOU CHANGE ANY CODE BELOW ~~~
+const DISK_CACHE_BREAKER = 7;
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 // Put MDX output into JSON for client.
 export async function getStaticProps(context) {
   const fs = require('fs');
   const {
     prepareMDX,
+    PREPARE_MDX_CACHE_BREAKER,
   } = require('../utils/prepareMDX');
   const rootDir = process.cwd() + '/src/content/';
   const mdxComponentNames = Object.keys(MDXComponents);
@@ -69,6 +75,36 @@ export async function getStaticProps(context) {
     mdx = fs.readFileSync(rootDir + path + '.md', 'utf8');
   } catch {
     mdx = fs.readFileSync(rootDir + path + '/index.md', 'utf8');
+  }
+
+  // See if we have a cached output first.
+  const {FileStore, stableHash} = require('metro-cache');
+  const store = new FileStore({
+    root: process.cwd() + '/node_modules/.cache/react-docs-mdx/',
+  });
+  const hash = Buffer.from(
+    stableHash({
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      // ~~~~ IMPORTANT: Everything that the code below may rely on.
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      mdx,
+      mdxComponentNames,
+      DISK_CACHE_BREAKER,
+      PREPARE_MDX_CACHE_BREAKER,
+      lockfile: fs.readFileSync(process.cwd() + '/yarn.lock', 'utf8'),
+    })
+  );
+  const cached = await store.get(hash);
+  if (cached) {
+    console.log(
+      'Reading compiled MDX for /' + path + ' from ./node_modules/.cache/'
+    );
+    return cached;
+  }
+  if (process.env.NODE_ENV === 'production') {
+    console.log(
+      'Cache miss for MDX for /' + path + ' from ./node_modules/.cache/'
+    );
   }
 
   // If we don't add these fake imports, the MDX compiler
@@ -88,6 +124,7 @@ export async function getStaticProps(context) {
   const jsxCode = await compileMdx(mdxWithFakeImports, {
     remarkPlugins: [
       ...remarkPlugins,
+      (await import('remark-gfm')).default,
       (await import('remark-frontmatter')).default,
     ],
     rehypePlugins: [
@@ -163,6 +200,8 @@ export async function getStaticProps(context) {
     }
   }
 
+  // Cache it on the disk.
+  await store.set(hash, output);
   return output;
 }
 
