@@ -5,10 +5,20 @@
 import cn from 'classnames';
 import {highlightTree} from '@codemirror/highlight';
 import {javascript} from '@codemirror/lang-javascript';
+import {css} from '@codemirror/lang-css';
 import {HighlightStyle, tags} from '@codemirror/highlight';
 import rangeParser from 'parse-numeric-range';
+import {CustomTheme} from '../Sandpack/Themes';
+
+interface InlineHiglight {
+  step: number;
+  line: number;
+  startColumn: number;
+  endColumn: number;
+}
 
 const jsxLang = javascript({jsx: true, typescript: false});
+const cssLang = css();
 
 const CodeBlock = function CodeBlock({
   children: {
@@ -27,10 +37,13 @@ const CodeBlock = function CodeBlock({
   noMargin?: boolean;
 }) {
   let lang = jsxLang;
+  if (className === 'language-css') {
+    lang = cssLang;
+  }
   const tree = lang.language.parser.parse(code);
   let tokenStarts = new Map();
   let tokenEnds = new Map();
-  const highlightTheme = getSyntaxHighlight();
+  const highlightTheme = getSyntaxHighlight(CustomTheme);
   highlightTree(tree, highlightTheme.match, (from, to, className) => {
     tokenStarts.set(from, className);
     tokenEnds.set(to, className);
@@ -123,11 +136,15 @@ function classNameToken(name: string): string {
   return `sp-syntax-${name}`;
 }
 
-function getSyntaxHighlight(): HighlightStyle {
+function getSyntaxHighlight(theme: any): HighlightStyle {
   return HighlightStyle.define([
     {
       tag: tags.keyword,
       class: classNameToken('keyword'),
+    },
+    {
+      tag: [tags.atom, tags.number, tags.bool],
+      class: classNameToken('static'),
     },
     {
       tag: tags.tagName,
@@ -139,8 +156,20 @@ function getSyntaxHighlight(): HighlightStyle {
       class: classNameToken('definition'),
     },
     {
+      tag: tags.propertyName,
+      class: classNameToken('property'),
+    },
+    {
+      tag: [tags.literal, tags.inserted],
+      class: classNameToken(theme.syntax.string ? 'string' : 'static'),
+    },
+    {
       tag: tags.punctuation,
       class: classNameToken('punctuation'),
+    },
+    {
+      tag: [tags.comment, tags.quote],
+      class: classNameToken('comment'),
     },
   ]);
 }
