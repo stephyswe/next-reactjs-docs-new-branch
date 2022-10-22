@@ -123,8 +123,20 @@ html.dark .sp-wrapper {
 }
 
 /**
-  * Editor
-  */
+ * Editor
+ */
+.sandpack .sp-code-editor {
+  flex: 1 1;
+  position: relative;
+  overflow: auto;
+  background: var(--sp-colors-surface1);
+}
+
+.sandpack .sp-code-editor .cm-editor,
+.sandpack .sp-code-editor .cm-editor .cm-gutters {
+  background-color: transparent;
+}
+
 .sandpack .sp-code-editor .cm-content,
 .sandpack .sp-code-editor .cm-gutters,
 .sandpack .sp-code-editor .cm-gutterElement {
@@ -172,6 +184,7 @@ html.dark .sp-wrapper {
 .sandpack .sp-syntax-keyword {
   color: var(--sp-syntax-color-keyword);
 }
+
 .sandpack .sp-syntax-definition {
   color: var(--sp-syntax-color-definition);
 }
@@ -219,7 +232,6 @@ html.dark .sp-wrapper {
     max-height: unset;
   }
 }
-
 
 /**
  * Expand button
