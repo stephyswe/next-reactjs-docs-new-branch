@@ -21,7 +21,7 @@ module.exports = {
   'border-dark': '#343A46', // gray-80
   'secondary-button': '#EBECF0', // gray-10
   'secondary-button-dark': '#404756', // gray-70
-  
+
   // Gray
   'gray-95': '#16181D',
   'gray-80': '#343A46',
@@ -29,4 +29,9 @@ module.exports = {
   'gray-50': '#5E687E', // unused
   'gray-30': '#99A1B3',
   'gray-10': '#EBECF0',
+
+  // MISC
+  github: {
+    highlight: '#fffbdd',
+  },
 };

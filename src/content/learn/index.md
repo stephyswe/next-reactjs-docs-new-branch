@@ -32,3 +32,16 @@ function MyButton() {
   );
 }
 ```
+
+Now that you've declared `MyButton`, you can nest it into another component:
+
+```js {5}
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton />
+    </div>
+  );
+}
+```

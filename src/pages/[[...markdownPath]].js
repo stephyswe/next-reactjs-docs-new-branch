@@ -84,10 +84,23 @@ export async function getStaticProps(context) {
   // Turn the MDX we just read into some JS we can execute.
   const {remarkPlugins} = require('../../plugins/markdownToHtml');
   const {compile: compileMdx} = await import('@mdx-js/mdx');
+  const visit = (await import('unist-util-visit')).default;
   const jsxCode = await compileMdx(mdxWithFakeImports, {
     remarkPlugins: [
       ...remarkPlugins,
       (await import('remark-frontmatter')).default,
+    ],
+    rehypePlugins: [
+      // Support stuff like ```js App.js {1-5} active by passing it through.
+      function rehypeMetaAsAttributes() {
+        return (tree) => {
+          visit(tree, 'element', (node) => {
+            if (node.tagName === 'code' && node.data && node.data.meta) {
+              node.properties.meta = node.data.meta;
+            }
+          });
+        };
+      },
     ],
   });
   const {transform} = require('@babel/core');

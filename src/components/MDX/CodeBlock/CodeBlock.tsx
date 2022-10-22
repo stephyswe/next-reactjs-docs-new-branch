@@ -6,6 +6,7 @@ import cn from 'classnames';
 import {highlightTree} from '@codemirror/highlight';
 import {javascript} from '@codemirror/lang-javascript';
 import {HighlightStyle, tags} from '@codemirror/highlight';
+import rangeParser from 'parse-numeric-range';
 
 const jsxLang = javascript({jsx: true, typescript: false});
 
@@ -35,6 +36,10 @@ const CodeBlock = function CodeBlock({
     tokenEnds.set(to, className);
   });
   const highlightedLines = new Map();
+  const lineDecorators = getLineDecorators(code, meta);
+  for (let decorator of lineDecorators) {
+    highlightedLines.set(decorator.line - 1, decorator.className);
+  }
 
   // Produce output based on tokens and decorators.
   // We assume tokens never overlap other tokens, and
@@ -138,4 +143,45 @@ function getSyntaxHighlight(): HighlightStyle {
       class: classNameToken('punctuation'),
     },
   ]);
+}
+
+function getLineDecorators(
+  code: string,
+  meta: string
+): Array<{
+  line: number;
+  className: string;
+}> {
+  if (!meta) {
+    return [];
+  }
+  const linesToHighlight = getHighlightLines(meta);
+  const highlightedLineConfig = linesToHighlight.map((line) => {
+    return {
+      className: 'bg-github-highlight dark:bg-opacity-10',
+      line,
+    };
+  });
+  return highlightedLineConfig;
+}
+
+
+/**
+ *
+ * @param meta string provided after the language in a markdown block
+ * @returns array of lines to highlight
+ * @example
+ * ```js {1-3,7} [[1, 1, 20, 33], [2, 4, 4, 8]] App.js active
+ * ...
+ * ```
+ *
+ * -> The meta is `{1-3,7} [[1, 1, 20, 33], [2, 4, 4, 8]] App.js active`
+ */
+function getHighlightLines(meta: string): number[] {
+  const HIGHLIGHT_REGEX = /{([\d,-]+)}/;
+  const parsedMeta = HIGHLIGHT_REGEX.exec(meta);
+  if (!parsedMeta) {
+    return [];
+  }
+  return rangeParser(parsedMeta[1]);
 }

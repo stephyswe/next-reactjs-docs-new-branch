@@ -2,7 +2,7 @@
  * Copyright (c) Facebook, Inc. and its affiliates.
  */
 
- .sandpack {
+.sandpack {
   color-scheme: inherit;
   -webkit-font-smoothing: antialiased;
 
@@ -22,6 +22,13 @@ html.dark .sp-wrapper {
   --sp-syntax-color-keyword: #77b7d7;
   --sp-syntax-color-tag: #dfab5c;
   --sp-syntax-color-definition: #86d9ca;
+}
+
+/**
+ * Reset
+ */
+.sandpack .sp-wrapper {
+  width: 100%;
 }
 
 /**
