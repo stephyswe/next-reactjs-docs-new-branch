@@ -9,6 +9,7 @@
   --sp-space-1: 4px;
   --sp-space-3: 12px;
   --sp-space-5: 20px;
+  --sp-layout-height: 300px;
 
   --sp-font-body: Optimistic Display, -apple-system, ui-sans-serif, system-ui,
     -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial,
@@ -202,8 +203,8 @@ html.dark .sp-wrapper {
 }
 
 /**
-  * Placeholder
-  */
+ * Placeholder
+ */
 .sandpack .sp-code-editor .sp-pre-placeholder {
   @apply font-mono;
   font-size: 13.6px;
@@ -212,25 +213,14 @@ html.dark .sp-wrapper {
   -webkit-font-smoothing: auto;
 }
 
-@media (min-width: 1280px) {
-  .sandpack .sp-layout > .sp-stack:nth-child(1) {
-    /* On desktop, clamp height by pixels instead. */
-    height: auto;
-    min-height: unset;
-    max-height: 406px;
-  }
-  .sandpack .sp-layout > .sp-stack:nth-child(2) {
-    /* On desktop, clamp height by pixels instead. */
-    height: auto;
-    min-height: unset;
-    max-height: 406px;
-  }
-  .sandpack .sp-layout.sp-layout-expanded > .sp-stack:nth-child(1) {
-    max-height: unset;
-  }
-  .sandpack .sp-layout.sp-layout-expanded > .sp-stack:nth-child(2) {
-    max-height: unset;
-  }
+.sandpack--playground .sp-code-editor .sp-pre-placeholder {
+  padding-left: 48px !important;
+  margin-left: 0px !important;
+}
+
+.text-xl .sp-pre-placeholder {
+  font-size: 16px !important;
+  line-height: 24px !important;
 }
 
 /**
