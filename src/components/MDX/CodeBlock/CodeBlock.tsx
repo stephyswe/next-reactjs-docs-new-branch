@@ -83,6 +83,10 @@ const CodeBlock = function CodeBlock({
 
     if (tokenStarts.has(i)) {
       currentToken = tokenStarts.get(i);
+      if (!currentDecorator) {
+        lineOutput.push(buffer);
+        buffer = '';
+      }
     }
     if (code[i] === '\n') {
       lineOutput.push(buffer);
