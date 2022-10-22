@@ -407,3 +407,29 @@ The first `MyButton` updates its `count` to `1`
 </Diagram>
 
 </DiagramGroup>
+
+However, often you'll need components to *share data and always update together*.
+
+To make both `MyButton` components display the same `count` and update together, you need to move the state from the individual buttons "upwards" to the closest component containing all of them.
+
+In this example, it is `MyApp`:
+
+<DiagramGroup>
+
+<Diagram name="sharing_data_parent" height={385} width={410} alt="Diagram showing a tree of three components, one parent labeled MyApp and two children labeled MyButton. MyApp contains a count value of zero which is passed down to both of the MyButton components, which also show value zero." >
+
+Initially, `MyApp`'s `count` state is `0` and is passed down to both children
+
+</Diagram>
+
+<Diagram name="sharing_data_parent_clicked" height={385} width={410} alt="The same diagram as the previous, with the count of the parent MyApp component highlighted indicating a click with the value incremented to one. The flow to both of the children MyButton components is also highlighted, and the count value in each child is set to one indicating the value was passed down." >
+
+On click, `MyApp` updates its `count` state to `1` and passes it down to both children
+
+</Diagram>
+
+</DiagramGroup>
+
+Now when you click either button, the `count` in `MyApp` will change, which will change both of the counts in `MyButton`. Here's how you can express this in code.
+
+First, *move the state up* from `MyButton` into `MyApp`:
