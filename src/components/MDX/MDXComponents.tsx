@@ -7,6 +7,7 @@ import {H2, H3} from './Heading';
 import Intro from './Intro';
 import Link from './Link';
 import HomepageHero from './HomepageHero';
+import SimpleCallout from './SimpleCallout';
 
 const P = (p: JSX.IntrinsicElements['p']) => (
   <p className="whitespace-pre-wrap my-4" {...p} />
@@ -18,6 +19,18 @@ const LI = (p: JSX.IntrinsicElements['li']) => (
 const UL = (p: JSX.IntrinsicElements['ul']) => (
   <ul className="ml-6 my-3 list-disc" {...p} />
 );
+
+
+function YouWillLearn({
+  children,
+  isChapter,
+}: {
+  children: any;
+  isChapter?: boolean;
+}) {
+  let title = isChapter ? 'In this chapter' : 'You will learn';
+  return <SimpleCallout title={title}>{children}</SimpleCallout>;
+}
 
 function LinkWithTodo({href, children, ...props}: JSX.IntrinsicElements['a']) {
   if (href?.startsWith('TODO')) {
@@ -42,7 +55,8 @@ export const MDXComponents = {
     return <div className="max-w-4xl ml-0 2xl:mx-auto">{children}</div>;
   },
   HomepageHero,
-  Intro
+  Intro,
+  YouWillLearn
 };
 
 for (let key in MDXComponents) {
