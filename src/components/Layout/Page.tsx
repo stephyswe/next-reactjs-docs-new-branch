@@ -7,10 +7,12 @@ import * as React from 'react';
 import {useRouter} from 'next/router';
 import {Nav} from './Nav';
 import {RouteItem, SidebarContext} from './useRouteMeta';
+import {useActiveSection} from 'hooks/useActiveSection';
 import {Footer} from './Footer';
 import {Toc} from './Toc';
 import SocialBanner from '../SocialBanner';
 import sidebarHome from '../../sidebarHome.json';
+import sidebarLearn from '../../sidebarLearn.json';
 import type {TocItem} from 'components/MDX/TocContext';
 
 interface PageProps {
@@ -20,7 +22,13 @@ interface PageProps {
 
 export function Page({children, toc}: PageProps) {
   const {asPath} = useRouter();
+  const section = useActiveSection();
   let routeTree = sidebarHome as RouteItem;
+  switch (section) {
+    case 'learn':
+      routeTree = sidebarLearn as RouteItem;
+      break;
+  }
   return (
     <>
       <SocialBanner />
