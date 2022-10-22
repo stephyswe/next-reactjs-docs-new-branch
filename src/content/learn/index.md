@@ -279,3 +279,111 @@ export default function ShoppingList() {
 ```
 
 </Sandpack>
+
+## Responding to events {/*responding-to-events*/}
+
+You can respond to events by declaring *event handler* functions inside your components:
+
+```js {2-4,7}
+function MyButton() {
+  function handleClick() {
+    alert('You clicked me!');
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Click me
+    </button>
+  );
+}
+```
+
+Notice how `onClick={handleClick}` has no parentheses at the end! Do not _call_ the event handler function: you only need to *pass it down*. React will call your event handler when the user clicks the button.
+
+## Updating the screen {/*updating-the-screen*/}
+
+Often, you'll want your component to "remember" some information and display it. For example, maybe you want to count the number of times a button is clicked. To do this, add *state* to your component.
+
+First, import [`useState`](/apis/react/useState) from React:
+
+```js
+import { useState } from 'react';
+```
+
+Now you can declare a *state variable* inside your component:
+
+```js
+function MyButton() {
+  const [count, setCount] = useState(0);
+```
+
+You will get two things from `useState`: the current state (`count`), and the function that lets you update it (`setCount`). You can give them any names, but the convention is to call them like `[something, setSomething]`.
+
+The first time the button is displayed, `count` will be `0` because you passed `0` to `useState()`. When you want to change state, call `setCount()` and pass the new value to it. Clicking this button will increment the counter:
+
+```js {5}
+function MyButton() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+```
+
+React will call your component function again. This time, `count` will be `1`. Then it will be `2`. And so on.
+
+If you render the same component multiple times, each will get its own state. Try clicking each button separately:
+
+<Sandpack>
+
+```js
+import { useState } from 'react';
+
+function MyButton() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Counters that update separately</h1>
+      <MyButton />
+      <MyButton />
+    </div>
+  );
+}
+```
+
+```css
+button {
+  display: block;
+  margin-bottom: 5px;
+}
+```
+
+</Sandpack>
+
+Notice how each button "remembers" its own `count` state and doesn't affect other buttons.
+
+## Using Hooks {/*using-hooks*/}
+
+Functions starting with `use` are called *Hooks*. `useState` is a built-in Hook provided by React. You can find other built-in Hooks in the [React API reference.](/apis/react) You can also write your own Hooks by combining the existing ones.
+
+Hooks are more restrictive than regular functions. You can only call Hooks *at the top level* of your components (or other Hooks). If you want to use `useState` in a condition or a loop, extract a new component and put it there.
