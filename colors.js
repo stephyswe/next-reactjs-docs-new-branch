@@ -24,6 +24,7 @@ module.exports = {
 
   // Gray
   'gray-95': '#16181D',
+  'gray-90': '#23272F',
   'gray-80': '#343A46',
   'gray-70': '#404756',
   'gray-60': '#4E5769',
@@ -43,6 +44,7 @@ module.exports = {
 
   // RED
   'red-40': '#C1554D',
+  'red-30': '#D07D77',
 
   // MISC
   github: {

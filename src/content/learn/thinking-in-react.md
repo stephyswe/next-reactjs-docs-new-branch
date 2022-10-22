@@ -245,3 +245,215 @@ There are two types of "model" data in React: props and state. The two are very 
 Props and state are different, but they work together. A parent component will often keep some information in state (so that it can change it), and *pass it down* to child components as their props. It's okay if the difference still feels fuzzy on the first read. It takes a bit of practice for it to really stick!
 
 </DeepDive>
+
+## Step 4: Identify where your state should live {/*step-4-identify-where-your-state-should-live*/}
+
+After identifying your app’s minimal state data, you need to identify which component is responsible for changing this state, or *owns* the state. Remember: React uses one-way data flow, passing data down the component hierarchy from parent to child component. It may not be immediately clear which component should own what state. This can be challenging if you’re new to this concept, but you can figure it out by following these steps!
+
+For each piece of state in your application:
+
+1. Identify *every* component that renders something based on that state.
+2. Find their closest common parent component--a component above them all in the hierarchy.
+3. Decide where the state should live:
+    1. Often, you can put the state directly into their common parent.
+    2. You can also put the state into some component above their common parent.
+    3. If you can't find a component where it makes sense to own the state, create a new component solely for holding the state and add it somewhere in the hierarchy above the common parent component.
+
+In the previous step, you found two pieces of state in this application: the search input text, and the value of the checkbox. In this example, they always appear together, so it is easier to think of them as a single piece of state.
+
+Now let's run through our strategy for this state:
+
+1. **Identify components that use state:**
+    * `ProductTable` needs to filter the product list based on that state (search text and checkbox value). 
+    * `SearchBar` needs to display that state (search text and checkbox value).
+1. **Find their common parent:** The first parent component both components share is `FilterableProductTable`.
+2. **Decide where the state lives**: We'll keep the filter text and checked state values in `FilterableProductTable`.
+
+So the state values will live in `FilterableProductTable`. 
+
+Add state to the component with the [`useState()` Hook.](/apis/react/useState) Hooks let you "hook into" a component's [render cycle.](/learn/render-and-commit) Add two state variables at the top of `FilterableProductTable` and specify the initial state of your application:
+
+```js
+function FilterableProductTable({ products }) {
+  const [filterText, setFilterText] = useState('');
+  const [inStockOnly, setInStockOnly] = useState(false);  
+```
+
+Then, pass `filterText` and `inStockOnly` to `ProductTable` and `SearchBar` as props:
+
+```js
+<div>
+  <SearchBar 
+    filterText={filterText} 
+    inStockOnly={inStockOnly} />
+  <ProductTable 
+    products={products}
+    filterText={filterText}
+    inStockOnly={inStockOnly} />
+</div>
+```
+
+You can start seeing how your application will behave. Edit the `filterText` initial value from `useState('')` to `useState('fruit')` in the sandbox code below. You'll see both the search input text and the table update:
+
+<Sandpack>
+
+```jsx App.js
+import { useState } from 'react';
+
+function FilterableProductTable({ products }) {
+  const [filterText, setFilterText] = useState('');
+  const [inStockOnly, setInStockOnly] = useState(false);
+
+  return (
+    <div>
+      <SearchBar 
+        filterText={filterText} 
+        inStockOnly={inStockOnly} />
+      <ProductTable 
+        products={products}
+        filterText={filterText}
+        inStockOnly={inStockOnly} />
+    </div>
+  );
+}
+
+function ProductCategoryRow({ category }) {
+  return (
+    <tr>
+      <th colSpan="2">
+        {category}
+      </th>
+    </tr>
+  );
+}
+
+function ProductRow({ product }) {
+  const name = product.stocked ? product.name :
+    <span style={{ color: 'red' }}>
+      {product.name}
+    </span>;
+
+  return (
+    <tr>
+      <td>{name}</td>
+      <td>{product.price}</td>
+    </tr>
+  );
+}
+
+function ProductTable({ products, filterText, inStockOnly }) {
+  const rows = [];
+  let lastCategory = null;
+
+  products.forEach((product) => {
+    if (
+      product.name.toLowerCase().indexOf(
+        filterText.toLowerCase()
+      ) === -1
+    ) {
+      return;
+    }
+    if (inStockOnly && !product.stocked) {
+      return;
+    }
+    if (product.category !== lastCategory) {
+      rows.push(
+        <ProductCategoryRow
+          category={product.category}
+          key={product.category} />
+      );
+    }
+    rows.push(
+      <ProductRow
+        product={product}
+        key={product.name} />
+    );
+    lastCategory = product.category;
+  });
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+  );
+}
+
+function SearchBar({ filterText, inStockOnly }) {
+  return (
+    <form>
+      <input 
+        type="text" 
+        value={filterText} 
+        placeholder="Search..."/>
+      <label>
+        <input 
+          type="checkbox" 
+          checked={inStockOnly} />
+        {' '}
+        Only show products in stock
+      </label>
+    </form>
+  );
+}
+
+const PRODUCTS = [
+  {category: "Fruits", price: "$1", stocked: true, name: "Apple"},
+  {category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit"},
+  {category: "Fruits", price: "$2", stocked: false, name: "Passionfruit"},
+  {category: "Vegetables", price: "$2", stocked: true, name: "Spinach"},
+  {category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin"},
+  {category: "Vegetables", price: "$1", stocked: true, name: "Peas"}
+];
+
+export default function App() {
+  return <FilterableProductTable products={PRODUCTS} />;
+}
+```
+
+```css
+body {
+  padding: 5px
+}
+label {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+th {
+  padding-top: 5px;
+}
+td {
+  padding: 2px;
+}
+```
+
+</Sandpack>
+
+Notice that editing the form doesn't work yet. There is a console error in the sandbox above explaining why:
+
+<ConsoleBlock level="error">
+
+You provided a \`value\` prop to a form field without an \`onChange\` handler. This will render a read-only field.
+
+</ConsoleBlock>
+
+In the sandbox above, `ProductTable` and `SearchBar` read the `filterText` and `inStockOnly` props to render the table, the input, and the checkbox. For example, here is how `SearchBar` populates the input value:
+
+```js {1,6}
+function SearchBar({ filterText, inStockOnly }) {
+  return (
+    <form>
+      <input 
+        type="text" 
+        value={filterText} 
+        placeholder="Search..."/>
+```
+
+However, you haven't added any code to respond to the user actions like typing yet. This will be your final step.
+
