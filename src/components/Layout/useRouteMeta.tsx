@@ -51,11 +51,48 @@ export function useRouteMeta(rootRoute?: RouteItem) {
   const cleanedPath = router.asPath.split(/[\?\#]/)[0];
   const breadcrumbs = getBreadcrumbs(cleanedPath, routeTree);
   return {
+    ...getRouteMeta(cleanedPath, routeTree),
     breadcrumbs: breadcrumbs.length > 0 ? breadcrumbs : [routeTree],
   };
 }
 
 export const SidebarContext = createContext<RouteItem>({title: 'root'});
+
+
+// Performs a depth-first search to find the current route and its previous/next route
+function getRouteMeta(
+  searchPath: string,
+  currentRoute: RouteItem,
+  ctx: RouteMeta = {}
+): RouteMeta {
+  const {routes} = currentRoute;
+
+  const newCtx =  JSON.parse(JSON.stringify(ctx));
+
+  console.log('newCtx', newCtx)
+
+  if (ctx.route && !ctx.nextRoute) {
+    ctx.nextRoute = currentRoute;
+  }
+
+  if (currentRoute.path === searchPath) {
+    ctx.route = currentRoute;
+  }
+
+  if (!ctx.route) {
+    ctx.prevRoute = currentRoute;
+  }
+
+  if (!routes) {
+    return ctx;
+  }
+
+  for (const route of routes) {
+    getRouteMeta(searchPath, route, ctx);
+  }
+
+  return ctx;
+}
 
 // iterates the route tree from the current route to find its ancestors for breadcrumbs
 function getBreadcrumbs(
