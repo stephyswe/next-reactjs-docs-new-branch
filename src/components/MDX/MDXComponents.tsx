@@ -5,6 +5,7 @@
 import * as React from 'react';
 import CodeBlock from './CodeBlock';
 import {H2, H3} from './Heading';
+import InlineCode from './InlineCode';
 import Intro from './Intro';
 import Link from './Link';
 import HomepageHero from './HomepageHero';
@@ -53,6 +54,7 @@ export const MDXComponents = {
   h2: H2,
   h3: H3,
   a: LinkWithTodo,
+  code: InlineCode,
   pre: CodeBlock,
   MaxWidth({children}: {children: any}) {
     return <div className="max-w-4xl ml-0 2xl:mx-auto">{children}</div>;

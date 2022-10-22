@@ -51,6 +51,9 @@
     color-scheme: dark;
   }
 
+  .text-code {
+    font-size: calc(1em - 10%) !important;
+  }
   img {
     max-width: calc(min(700px, 100%));
   }
