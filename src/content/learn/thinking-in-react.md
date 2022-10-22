@@ -204,3 +204,44 @@ After building your components, you'll have a library of reusable components tha
 At this point, you should not be using any state values. That’s for the next step!
 
 </Pitfall>
+
+## Step 3: Find the minimal but complete representation of UI state {/*step-3-find-the-minimal-but-complete-representation-of-ui-state*/}
+
+To make the UI interactive, you need to let users change your underlying data model. You will use *state* for this.
+
+Think of state as the minimal set of changing data that your app needs to remember. The most important principle for structuring state is to keep it [DRY (Don't Repeat Yourself).](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) Figure out the absolute minimal representation of the state your application needs and compute everything else on-demand. For example, if you're building a shopping list, you can store the items as an array in state. If you want to also display the number of items in the list, don't store the number of items as another state value--instead, read the length of your array.
+
+Now think of all of the pieces of data in this example application:
+
+1. The original list of products
+2. The search text the user has entered
+3. The value of the checkbox
+4. The filtered list of products
+
+Which of these are state? Identify the ones that are not:
+
+* Does it **remain unchanged** over time? If so, it isn't state.
+* Is it **passed in from a parent** via props? If so, it isn't state.
+* **Can you compute it** based on existing state or props in your component? If so, it *definitely* isn't state!
+
+What's left is probably state.
+
+Let's go through them one by one again:
+
+1. The original list of products is **passed in as props, so it's not state.** 
+2. The search text seems to be state since it changes over time and can't be computed from anything.
+3. The value of the checkbox seems to be state since it changes over time and can't be computed from anything.
+4. The filtered list of products **isn't state because it can be computed** by taking the original list of products and filtering it according to the search text and value of the checkbox.
+
+This means only the search text and the value of the checkbox are state! Nicely done!
+
+<DeepDive title="Props vs State">
+
+There are two types of "model" data in React: props and state. The two are very different:
+
+* [**Props** are like arguments you pass](/learn/passing-props-to-a-component) to a function. They let a parent component pass data to a child component and customize its appearance. For example, a `Form` can pass a `color` prop to a `Button`.
+* [**State** is like a component’s memory.](/learn/state-a-components-memory) It lets a component keep track of some information and change it in response to interactions. For example, a `Button` might keep track of `isHovered` state.
+
+Props and state are different, but they work together. A parent component will often keep some information in state (so that it can change it), and *pass it down* to child components as their props. It's okay if the difference still feels fuzzy on the first read. It takes a bit of practice for it to really stick!
+
+</DeepDive>
