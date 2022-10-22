@@ -8,6 +8,7 @@ import {H2, H3} from './Heading';
 import Intro from './Intro';
 import Link from './Link';
 import HomepageHero from './HomepageHero';
+import Sandpack from './Sandpack';
 import SimpleCallout from './SimpleCallout';
 
 const P = (p: JSX.IntrinsicElements['p']) => (
@@ -58,6 +59,7 @@ export const MDXComponents = {
   },
   HomepageHero,
   Intro,
+  Sandpack,
   YouWillLearn
 };
 

@@ -30,6 +30,9 @@ module.exports = {
   'gray-30': '#99A1B3',
   'gray-10': '#EBECF0',
 
+  // RED
+  'red-40': '#C1554D',
+
   // MISC
   github: {
     highlight: '#fffbdd',

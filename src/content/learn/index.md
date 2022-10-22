@@ -45,3 +45,32 @@ export default function MyApp() {
   );
 }
 ```
+
+Notice that `<MyButton />` starts with a capital letter. That's how you know it's a React component. React component names must always start with a capital letter, while HTML tags must be lowercase.
+
+Have a look at the result:
+
+<Sandpack>
+
+```js
+function MyButton() {
+  return (
+    <button>
+      I'm a button
+    </button>
+  );
+}
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton />
+    </div>
+  );
+}
+```
+
+</Sandpack>
+
+The `export default` keywords specify the main component in the file. If you're not familiar with some piece of JavaScript syntax, [MDN](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) and [javascript.info](https://javascript.info/import-export) have great references.

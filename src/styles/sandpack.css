@@ -6,19 +6,39 @@
   color-scheme: inherit;
   -webkit-font-smoothing: antialiased;
 
+  --sp-space-1: 4px;
+  --sp-space-3: 12px;
   --sp-space-5: 20px;
+
+  --sp-font-body: Optimistic Display, -apple-system, ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial,
+    Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
+    Noto Color Emoji;
+  --sp-font-mono: Source Code Pro, ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, Liberation Mono, Courier New, monospace;
+  --sp-font-size: calc(1em - 20%);
+  --sp-font-lineHeight: 24px;
 }
 
 /* Default theme */
 html .sandpack {
+  --sp-colors-disabled: #24292e;
+  --sp-colors-surface1: #fff;
+  --sp-colors-surface2: #e4e7eb;
+
+  --sp-syntax-color-plain: #24292e;
   --sp-syntax-color-keyword: #d73a49;
   --sp-syntax-color-tag: #22863a;
   --sp-syntax-color-definition: #6f42c1;
 }
-  
 
 /* Dark theme */
 html.dark .sp-wrapper {
+  --sp-colors-disabled: #fff;
+  --sp-colors-surface1: #16181d;
+  --sp-colors-surface2: #343a46;
+
+  --sp-syntax-color-plain: #ffffff;
   --sp-syntax-color-keyword: #77b7d7;
   --sp-syntax-color-tag: #dfab5c;
   --sp-syntax-color-definition: #86d9ca;
@@ -29,13 +49,92 @@ html.dark .sp-wrapper {
  */
 .sandpack .sp-wrapper {
   width: 100%;
+
+  font-size: var(--sp-font-size);
+  font-family: var(--sp-font-body);
+  line-height: var(--sp-font-lineHeight);
 }
 
 /**
-  * Code block
-  */
+ * Layout
+ */
+.sandpack .sp-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  background-color: var(--sp-colors-surface2);
+
+  -webkit-mask-image: -webkit-radial-gradient(
+    var(--sp-colors-surface1),
+    var(--sp-colors-surface1)
+  ); /* safest way to make all corner rounded */
+
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  overflow: initial;
+
+  gap: 1px;
+}
+
+@media screen and (max-width: 768px) {
+  .sandpack .sp-layout > .sp-stack {
+    height: auto;
+    min-width: 100% !important;
+  }
+}
+
+.sandpack .sp-layout > .sp-stack {
+  flex: 1 1 0px;
+  height: var(--sp-layout-height);
+}
+
+/**
+ * Navigation
+ */
+.sandpack .sp-tabs-scrollable-container {
+  overflow: auto;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  min-height: 40px;
+  margin-bottom: -1px;
+}
+
+
+/**
+ * Code block
+ */
 .cm-line {
   padding-left: var(--sp-space-5);
+}
+
+.sandpack .sp-code-editor .cm-content,
+.sandpack .sp-code-editor .cm-gutters,
+.sandpack .sp-code-editor .cm-gutterElement {
+  padding: 0;
+  -webkit-font-smoothing: auto; /* Improve the legibility */
+}
+
+.sandpack .sp-code-editor .cm-content {
+  overflow-x: auto;
+  padding-bottom: 18px;
+}
+
+.sandpack--playground .sp-code-editor .cm-line {
+  padding: 0 var(--sp-space-3);
+  width: max-content;
+}
+
+.sandpack--playground .sp-code-editor .cm-lineNumbers {
+  padding-left: var(--sp-space-3);
+  padding-right: var(--sp-space-1);
+  font-size: 13.6px;
+}
+
+.sp-code-editor .sp-cm .cm-scroller {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 18px;
 }
 
 /**
@@ -60,4 +159,80 @@ html.dark .sp-wrapper {
   line-height: 24px;
   padding: 18px 0;
   -webkit-font-smoothing: auto;
+}
+
+@media (min-width: 1280px) {
+  .sandpack .sp-layout > .sp-stack:nth-child(1) {
+    /* On desktop, clamp height by pixels instead. */
+    height: auto;
+    min-height: unset;
+    max-height: 406px;
+  }
+  .sandpack .sp-layout > .sp-stack:nth-child(2) {
+    /* On desktop, clamp height by pixels instead. */
+    height: auto;
+    min-height: unset;
+    max-height: 406px;
+  }
+  .sandpack .sp-layout.sp-layout-expanded > .sp-stack:nth-child(1) {
+    max-height: unset;
+  }
+  .sandpack .sp-layout.sp-layout-expanded > .sp-stack:nth-child(2) {
+    max-height: unset;
+  }
+}
+
+/**
+ * Expand button
+ */
+.sandpack .sp-layout {
+  min-height: 216px;
+}
+
+.sandpack .sp-layout > .sp-stack:nth-child(1) {
+  /* Force vertical if there isn't enough space. */
+  min-width: 431px;
+  /* No min height on mobile because we know code in advance. */
+  /* Max height is needed to avoid too long files. */
+  max-height: 40vh;
+}
+
+.sandpack .sp-layout.sp-layout-expanded > .sp-stack:nth-child(1) {
+  /* Clicking "show more" lets mobile editor go full height. */
+  max-height: unset;
+  height: auto;
+}
+
+.sandpack .sp-layout.sp-layout-expanded > .sp-stack:nth-child(2) {
+  /* Clicking "show more" lets mobile preview go full height. */
+  max-height: unset;
+  height: auto;
+}
+
+/**
+ * Hard fixes
+ */
+
+/**
+* The text-size-adjust CSS property controls the text inflation
+* algorithm used on some smartphones and tablets
+*/
+.sandpack .sp-cm {
+  -webkit-text-size-adjust: none;
+}
+
+/** 
+ * For iOS: prevent browser zoom when clicking on sandbox.
+ * Does NOT apply to code blocks.
+ */
+@media screen and (max-width: 768px) {
+  @supports (-webkit-overflow-scrolling: touch) {
+    .sandpack--playground .cm-content,
+    .sandpack--playground .sp-code-editor .sp-pre-placeholder {
+      font-size: initial;
+    }
+    .DocSearch-Input {
+      font-size: initial;
+    }
+  }
 }

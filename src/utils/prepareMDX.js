@@ -22,7 +22,9 @@ function wrapChildrenInMaxWidthContainers(children) {
   // <MaxWidth> wrappers. Keep reusing the same
   // wrapper as long as we can until we meet
   // a full-width section which interrupts it.
-
+  let fullWidthTypes = [
+    'Sandpack',
+  ];
   let wrapQueue = [];
   let finalChildren = [];
   function flushWrapper(key) {
@@ -32,11 +34,20 @@ function wrapChildrenInMaxWidthContainers(children) {
       wrapQueue = [];
     }
   }
-  function handleChild(child) {
+  function handleChild(child, key) {
     if (child == null) {
       return;
     }
-    wrapQueue.push(child);
+    if (typeof child !== 'object') {
+      wrapQueue.push(child);
+      return;
+    }
+    if (fullWidthTypes.includes(child.type)) {
+      flushWrapper(key);
+      finalChildren.push(child);
+    } else {
+      wrapQueue.push(child);
+    }
   }
   Children.forEach(children, handleChild);
   flushWrapper('last');
