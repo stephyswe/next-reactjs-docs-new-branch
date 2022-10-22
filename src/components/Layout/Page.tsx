@@ -8,14 +8,17 @@ import {useRouter} from 'next/router';
 import {Nav} from './Nav';
 import {RouteItem, SidebarContext} from './useRouteMeta';
 import {Footer} from './Footer';
+import {Toc} from './Toc';
 import SocialBanner from '../SocialBanner';
 import sidebarHome from '../../sidebarHome.json';
+import type {TocItem} from 'components/MDX/TocContext';
 
 interface PageProps {
   children: React.ReactNode;
+  toc: Array<TocItem>;
 }
 
-export function Page({children}: PageProps) {
+export function Page({children, toc}: PageProps) {
   const {asPath} = useRouter();
   let routeTree = sidebarHome as RouteItem;
   return (
@@ -36,6 +39,9 @@ export function Page({children}: PageProps) {
               <Footer />
             </main>
           </Suspense>
+          <div className="hidden lg:max-w-xs 2xl:block">
+            {toc.length > 0 && <Toc headings={toc} key={asPath} />}
+          </div>
         </div>
       </SidebarContext.Provider>
     </>

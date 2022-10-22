@@ -7,14 +7,17 @@ import {MDXComponents} from 'components/MDX/MDXComponents';
 import {MarkdownPage} from 'components/Layout/MarkdownPage';
 import {Page} from 'components/Layout/Page';
 
-export default function Layout({content, meta}) {
+export default function Layout({content, toc, meta}) {
   const parsedContent = useMemo(
     () => JSON.parse(content, reviveNodeOnClient),
     [content]
   );
+  const parsedToc = useMemo(() => JSON.parse(toc, reviveNodeOnClient), [toc]);
   return (
-    <Page>
-      <MarkdownPage meta={meta}>{parsedContent}</MarkdownPage>
+    <Page toc={parsedToc}>
+      <MarkdownPage meta={meta}>
+        {parsedContent}
+      </MarkdownPage>
     </Page>
   );
 }
@@ -113,7 +116,10 @@ export async function getStaticProps(context) {
   const reactTree = fakeExports.default({});
 
   // Pre-process MDX output and serialize it.
-  let {children} = prepareMDX(reactTree.props.children);
+  let {toc, children} = prepareMDX(reactTree.props.children);
+  if (path === 'index') {
+    toc = [];
+  }
 
   // Parse Frontmatter headers from MDX.
   const fm = require('gray-matter');
@@ -122,6 +128,7 @@ export async function getStaticProps(context) {
   const output = {
     props: {
       content: JSON.stringify(children, stringifyNodeOnServer),
+      toc: JSON.stringify(toc, stringifyNodeOnServer),
       meta,
     },
   };

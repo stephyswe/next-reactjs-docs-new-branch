@@ -12,8 +12,9 @@ export const PREPARE_MDX_CACHE_BREAKER = 2;
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 export function prepareMDX(rawChildren) {
+  const toc = getTableOfContents(rawChildren);
   const children = wrapChildrenInMaxWidthContainers(rawChildren);
-  return {children};
+  return {toc, children};
 }
 
 function wrapChildrenInMaxWidthContainers(children) {
@@ -40,4 +41,29 @@ function wrapChildrenInMaxWidthContainers(children) {
   Children.forEach(children, handleChild);
   flushWrapper('last');
   return finalChildren;
+}
+
+function getTableOfContents(children) {
+  const anchors = Children.toArray(children)
+    .filter((child) => {
+      if (child.type) {
+        return ['h1', 'h2', 'h3'].includes(child.type);
+      }
+      return false;
+    })
+    .map((child) => {
+      return {
+        url: '#' + child.props.id,
+        depth: (child.type && parseInt(child.type.replace('h', ''), 0)) ?? 0,
+        text: child.props.children,
+      };
+    });
+  if (anchors.length > 0) {
+    anchors.unshift({
+      url: '#',
+      text: 'Overview',
+      depth: 2,
+    });
+  }
+  return anchors;
 }
