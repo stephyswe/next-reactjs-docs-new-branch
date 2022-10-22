@@ -31,6 +31,10 @@ module.exports = {
   'gray-30': '#99A1B3',
   'gray-10': '#EBECF0',
 
+  // Yellow
+  'yellow-60': '#B65700',
+  'yellow-40': '#DB7D27', // unused
+
   // RED
   'red-40': '#C1554D',
 
