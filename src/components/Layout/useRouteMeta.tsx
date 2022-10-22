@@ -67,10 +67,6 @@ function getRouteMeta(
 ): RouteMeta {
   const {routes} = currentRoute;
 
-  const newCtx =  JSON.parse(JSON.stringify(ctx));
-
-  console.log('newCtx', newCtx)
-
   if (ctx.route && !ctx.nextRoute) {
     ctx.nextRoute = currentRoute;
   }

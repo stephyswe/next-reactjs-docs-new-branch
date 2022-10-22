@@ -51,6 +51,14 @@ const Heading = forwardRefWithAs<HeadingProps, 'div'>(function Heading(
   );
 });
 
+export const H1 = ({className, ...props}: HeadingProps) => (
+  <Heading
+    as="h1"
+    className={cn(className, 'text-5xl font-bold leading-tight')}
+    {...props}
+  />
+);
+
 export const H2 = ({className, ...props}: HeadingProps) => (
   <Heading
     as="h2"
