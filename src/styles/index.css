@@ -1,6 +1,6 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
- */
+* Copyright (c) Facebook, Inc. and its affiliates.
+*/
 
 @tailwind base;
 @tailwind components;
@@ -17,7 +17,8 @@
 
   @font-face {
     font-family: 'Optimistic Display';
-    src: url('https://beta.reactjs.org/fonts/Optimistic_Display_W_Lt.woff2') format('woff2');
+    src: url('https://beta.reactjs.org/fonts/Optimistic_Display_W_Lt.woff2')
+      format('woff2');
     font-weight: 300;
     font-style: normal;
     font-display: swap;
@@ -25,7 +26,8 @@
 
   @font-face {
     font-family: 'Optimistic Display';
-    src: url('https://beta.reactjs.org/fonts/Optimistic_Display_W_Md.woff2') format('woff2');
+    src: url('https://beta.reactjs.org/fonts/Optimistic_Display_W_Md.woff2')
+      format('woff2');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -33,7 +35,8 @@
 
   @font-face {
     font-family: 'Optimistic Display';
-    src: url('https://beta.reactjs.org/fonts/Optimistic_Display_W_Bd.woff2') format('woff2');
+    src: url('https://beta.reactjs.org/fonts/Optimistic_Display_W_Bd.woff2')
+      format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -46,9 +49,18 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent;
   }
-  
+
   html.dark {
     color-scheme: dark;
+  }
+
+  a > code {
+    color: #087ea4 !important; /* blue-50 */
+    text-decoration: none !important;
+  }
+
+  html.dark a > code {
+    color: #149eca !important; /* blue-40 */
   }
 
   .text-code {
@@ -57,7 +69,6 @@
   img {
     max-width: calc(min(700px, 100%));
   }
-  
   /*
    * Hopefully when scrollbar-color lands everywhere,
    * (and not just in FF), we'll be able to keep just this.
@@ -84,6 +95,7 @@
     background-color: transparent;
   }
 }
+
 
 .mdx-heading .mdx-header-anchor svg {
   display: inline;
