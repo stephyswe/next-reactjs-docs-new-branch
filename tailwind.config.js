@@ -17,6 +17,11 @@ module.exports = {
       ...defaultTheme.screens,
       betterhover: {raw: '(hover: hover)'},
     },
+    boxShadow: {
+      lg: '0px 0.8px 2px rgba(0, 0, 0, 0.032), 0px 2.7px 6.7px rgba(0, 0, 0, 0.048), 0px 12px 30px rgba(0, 0, 0, 0.08)',
+      'lg-dark':
+        '0 0 0 1px rgba(255,255,255,.15), 0px 0.8px 2px rgba(0, 0, 0, 0.032), 0px 2.7px 6.7px rgba(0, 0, 0, 0.048), 0px 12px 30px rgba(0, 0, 0, 0.08)',
+    },
     extend: {
       fontFamily: {
         sans: [

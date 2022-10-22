@@ -25,6 +25,7 @@ module.exports = {
   // Gray
   'gray-95': '#16181D',
   'gray-80': '#343A46',
+  'gray-60': '#4E5769',
   'gray-50': '#5E687E', // unused
   'gray-30': '#99A1B3',
   'gray-10': '#EBECF0',

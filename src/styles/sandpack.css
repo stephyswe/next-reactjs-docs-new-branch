@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ */
+
+ .sandpack {
+  color-scheme: inherit;
+  -webkit-font-smoothing: antialiased;
+
+  --sp-space-5: 20px;
+}
+
+/* Default theme */
+html .sandpack {
+  --sp-syntax-color-keyword: #d73a49;
+  --sp-syntax-color-tag: #22863a;
+  --sp-syntax-color-definition: #6f42c1;
+}
+  
+
+/* Dark theme */
+html.dark .sp-wrapper {
+  --sp-syntax-color-keyword: #77b7d7;
+  --sp-syntax-color-tag: #dfab5c;
+  --sp-syntax-color-definition: #86d9ca;
+}
+
+/**
+  * Code block
+  */
+.cm-line {
+  padding-left: var(--sp-space-5);
+}
+
+/**
+  * Syntax highlight (code editor + code block)
+  */
+.sandpack .sp-syntax-keyword {
+  color: var(--sp-syntax-color-keyword);
+}
+.sandpack .sp-syntax-definition {
+  color: var(--sp-syntax-color-definition);
+}
+.sandpack .sp-syntax-tag {
+  color: var(--sp-syntax-color-tag);
+}
+
+/**
+  * Placeholder
+  */
+.sandpack .sp-code-editor .sp-pre-placeholder {
+  @apply font-mono;
+  font-size: 13.6px;
+  line-height: 24px;
+  padding: 18px 0;
+  -webkit-font-smoothing: auto;
+}
