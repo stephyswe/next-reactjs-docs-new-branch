@@ -387,3 +387,23 @@ Notice how each button "remembers" its own `count` state and doesn't affect othe
 Functions starting with `use` are called *Hooks*. `useState` is a built-in Hook provided by React. You can find other built-in Hooks in the [React API reference.](/apis/react) You can also write your own Hooks by combining the existing ones.
 
 Hooks are more restrictive than regular functions. You can only call Hooks *at the top level* of your components (or other Hooks). If you want to use `useState` in a condition or a loop, extract a new component and put it there.
+
+## Sharing data between components {/*sharing-data-between-components*/}
+
+In the previous example, each `MyButton` had its own independent `count`, and when each button was clicked, only the `count` for the button clicked changed:
+
+<DiagramGroup>
+
+<Diagram name="sharing_data_child" height={367} width={407} alt="Diagram showing a tree of three components, one parent labeled MyApp and two children labeled MyButton. Both MyButton components contain a count with value zero.">
+
+Initially, each `MyButton`'s `count` state is `0`
+
+</Diagram>
+
+<Diagram name="sharing_data_child_clicked" height={367} width={407} alt="The same diagram as the previous, with the count of the first child MyButton component highlighted indicating a click with the count value incremented to one. The second MyButton component still contains value zero." >
+
+The first `MyButton` updates its `count` to `1`
+
+</Diagram>
+
+</DiagramGroup>

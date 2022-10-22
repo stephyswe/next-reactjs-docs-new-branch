@@ -10,6 +10,8 @@ import Intro from './Intro';
 import Link from './Link';
 import HomepageHero from './HomepageHero';
 import Sandpack from './Sandpack';
+import Diagram from './Diagram';
+import DiagramGroup from './DiagramGroup';
 import SimpleCallout from './SimpleCallout';
 
 const P = (p: JSX.IntrinsicElements['p']) => (
@@ -56,6 +58,8 @@ export const MDXComponents = {
   a: LinkWithTodo,
   code: InlineCode,
   pre: CodeBlock,
+  Diagram,
+  DiagramGroup,
   MaxWidth({children}: {children: any}) {
     return <div className="max-w-4xl ml-0 2xl:mx-auto">{children}</div>;
   },
