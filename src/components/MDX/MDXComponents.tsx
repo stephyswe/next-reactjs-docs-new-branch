@@ -9,7 +9,7 @@ import {CodeDiagram} from './CodeDiagram';
 import ConsoleBlock from './ConsoleBlock';
 import ExpandableCallout from './ExpandableCallout';
 import ExpandableExample from './ExpandableExample';
-import {H2, H3} from './Heading';
+import {H2, H3, H4} from './Heading';
 import InlineCode from './InlineCode';
 import Intro from './Intro';
 import Link from './Link';
@@ -38,6 +38,18 @@ const Pitfall = ({children}: {children: React.ReactNode}) => (
   <ExpandableCallout type="pitfall">{children}</ExpandableCallout>
 );
 
+const Blockquote = ({
+  children,
+  ...props
+}: JSX.IntrinsicElements['blockquote']) => {
+  return (
+    <blockquote
+      className="mdx-blockquote py-4 px-8 my-8 shadow-inner bg-highlight dark:bg-highlight-dark bg-opacity-50 rounded-lg leading-6 flex relative"
+      {...props}>
+      <span className="block relative">{children}</span>
+    </blockquote>
+  );
+};
 
 function YouWillLearn({
   children,
@@ -64,11 +76,13 @@ function LinkWithTodo({href, children, ...props}: JSX.IntrinsicElements['a']) {
 
 export const MDXComponents = {
   p: P,
+  blockquote: Blockquote,
   ol: OL,
   ul: UL,
   li: LI,
   h2: H2,
   h3: H3,
+  h4: H4,
   a: LinkWithTodo,
   code: InlineCode,
   pre: CodeBlock,
