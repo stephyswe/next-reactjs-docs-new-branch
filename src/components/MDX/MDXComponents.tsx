@@ -18,6 +18,7 @@ import Sandpack from './Sandpack';
 import Diagram from './Diagram';
 import DiagramGroup from './DiagramGroup';
 import SimpleCallout from './SimpleCallout';
+import TerminalBlock from './TerminalBlock';
 
 const P = (p: JSX.IntrinsicElements['p']) => (
   <p className="whitespace-pre-wrap my-4" {...p} />
@@ -90,6 +91,7 @@ export const MDXComponents = {
   HomepageHero,
   Intro,
   Sandpack,
+  TerminalBlock,
   YouWillLearn
 };
 
