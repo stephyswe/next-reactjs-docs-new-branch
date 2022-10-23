@@ -24,7 +24,10 @@
 /* Default theme */
 html .sandpack {
   --sp-colors-accent: #087ea4;
+  --sp-colors-clickable: #959da5;
   --sp-colors-disabled: #24292e;
+  --sp-colors-error: #811e18;
+  --sp-colors-error-surface: #ffcdca;
   --sp-colors-surface1: #fff;
   --sp-colors-surface2: #e4e7eb;
 
@@ -32,6 +35,7 @@ html .sandpack {
   --sp-syntax-color-comment: #6a737d;
   --sp-syntax-color-keyword: #d73a49;
   --sp-syntax-color-tag: #22863a;
+  --sp-syntax-color-punctuation: #24292e;
   --sp-syntax-color-definition: #6f42c1;
   --sp-syntax-color-property: #005cc5;
   --sp-syntax-color-static: #032f62;
@@ -41,7 +45,10 @@ html .sandpack {
 /* Dark theme */
 html.dark .sp-wrapper {
   --sp-colors-accent: #149eca;
+  --sp-colors-clickable: #999;
   --sp-colors-disabled: #fff;
+  --sp-colors-error: #811e18;
+  --sp-colors-error-surface: #ffcdca;
   --sp-colors-surface1: #16181d;
   --sp-colors-surface2: #343a46;
 
@@ -49,6 +56,7 @@ html.dark .sp-wrapper {
   --sp-syntax-color-comment: #757575;
   --sp-syntax-color-keyword: #77b7d7;
   --sp-syntax-color-tag: #dfab5c;
+  --sp-syntax-color-punctuation: #ffffff;
   --sp-syntax-color-definition: #86d9ca;
   --sp-syntax-color-property: #77b7d7;
   --sp-syntax-color-static: #c64640;
@@ -182,6 +190,25 @@ html.dark .sp-wrapper {
   padding-left: var(--sp-space-3);
   padding-right: var(--sp-space-1);
   font-size: 13.6px;
+}
+
+.sandpack--playground .sp-code-editor .cm-line.cm-errorLine {
+  @apply bg-red-400;
+  --tw-bg-opacity: 0.1; /* Background tweak: base color + opacity */
+  position: relative;
+  padding-right: 2em;
+  display: inline-block;
+  min-width: 100%;
+}
+
+.sp-code-editor .cm-errorLine:after {
+  @apply text-red-500;
+  position: absolute;
+  right: 8px;
+  top: 0;
+  content: '\26A0';
+  font-size: 22px;
+  line-height: 20px;
 }
 
 .sp-code-editor .sp-cm .cm-scroller {
