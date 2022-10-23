@@ -19,6 +19,8 @@ import Diagram from './Diagram';
 import DiagramGroup from './DiagramGroup';
 import SimpleCallout from './SimpleCallout';
 import TerminalBlock from './TerminalBlock';
+import {IconNavArrow} from '../Icon/IconNavArrow';
+import ButtonLink from 'components/ButtonLink';
 
 const P = (p: JSX.IntrinsicElements['p']) => (
   <p className="whitespace-pre-wrap my-4" {...p} />
@@ -50,6 +52,39 @@ const Blockquote = ({
     </blockquote>
   );
 };
+
+function LearnMore({
+  children,
+  path,
+}: {
+  title: string;
+  path?: string;
+  children: any;
+}) {
+  return (
+    <>
+      <section className="p-8 mt-16 mb-16 flex flex-row shadow-inner justify-between items-center bg-card dark:bg-card-dark rounded-lg">
+        <div className="flex-col">
+          <h2 className="text-primary dark:text-primary-dark font-bold text-2xl leading-tight">
+            Ready to learn this topic?
+          </h2>
+          {children}
+          {path ? (
+            <ButtonLink
+              className="mt-1"
+              label="Read More"
+              href={path}
+              type="primary">
+              Read More
+              <IconNavArrow displayDirection="right" className="inline ml-1" />
+            </ButtonLink>
+          ) : null}
+        </div>
+      </section>
+      <hr className="border-border dark:border-border-dark mb-14" />
+    </>
+  );
+}
 
 function YouWillLearn({
   children,
@@ -104,6 +139,7 @@ export const MDXComponents = {
   Pitfall,
   HomepageHero,
   Intro,
+  LearnMore,
   Sandpack,
   TerminalBlock,
   YouWillLearn

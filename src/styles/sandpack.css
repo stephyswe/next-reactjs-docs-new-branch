@@ -23,6 +23,7 @@
 
 /* Default theme */
 html .sandpack {
+  --sp-colors-accent: #087ea4;
   --sp-colors-disabled: #24292e;
   --sp-colors-surface1: #fff;
   --sp-colors-surface2: #e4e7eb;
@@ -39,6 +40,7 @@ html .sandpack {
 
 /* Dark theme */
 html.dark .sp-wrapper {
+  --sp-colors-accent: #149eca;
   --sp-colors-disabled: #fff;
   --sp-colors-surface1: #16181d;
   --sp-colors-surface2: #343a46;
@@ -116,6 +118,27 @@ html.dark .sp-wrapper {
   margin-bottom: -1px;
 }
 
+.sp-tabs .sp-tab-button {
+  padding: 0 6px;
+  border-bottom: 2px solid transparent;
+}
+
+@media (min-width: 768px) {
+  .sp-tabs .sp-tab-button {
+    margin: 0 12px 0 0;
+  }
+}
+
+.sp-tabs .sp-tab-button,
+.sp-tabs .sp-tab-button:hover:not(:disabled, [data-active='true']),
+.sp-tabs .sp-tab-button[data-active='true'] {
+  color: var(--sp-colors-accent);
+}
+
+.sp-tabs .sp-tab-button[data-active='true'] {
+  border-bottom: 2px solid var(--sp-colors-accent);
+}
+
 /**
  * Code block
  */
@@ -188,6 +211,10 @@ html.dark .sp-wrapper {
 
 .sandpack .sp-syntax-definition {
   color: var(--sp-syntax-color-definition);
+}
+
+.sandpack .sp-syntax-punctuation {
+  color: var(--sp-syntax-color-punctuation);
 }
 
 .sandpack .sp-syntax-property {
