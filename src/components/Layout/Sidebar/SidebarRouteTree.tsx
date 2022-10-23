@@ -3,6 +3,7 @@
  */
 
 import {useRef, useLayoutEffect} from 'react';
+
 import cn from 'classnames';
 import {RouteItem} from 'components/Layout/useRouteMeta';
 import {useRouter} from 'next/router';
@@ -10,6 +11,7 @@ import {removeFromLast} from 'utils/removeFromLast';
 import {useRouteMeta} from '../useRouteMeta';
 import {SidebarLink} from './SidebarLink';
 import useCollapse from 'react-collapsed';
+import usePendingRoute from 'hooks/usePendingRoute';
 
 interface SidebarRouteTreeProps {
   isForceExpanded: boolean;
@@ -76,6 +78,8 @@ export function SidebarRouteTree({
 }: SidebarRouteTreeProps) {
   const {breadcrumbs} = useRouteMeta(routeTree);
   const cleanedPath = useRouter().asPath.split(/[\?\#]/)[0];
+  const pendingRoute = usePendingRoute();
+
   const slug = cleanedPath;
   const currentRoutes = routeTree.routes as RouteItem[];
   const expandedPath = currentRoutes.reduce(
@@ -96,7 +100,7 @@ export function SidebarRouteTree({
   const expanded = expandedPath;
   return (
     <ul>
-      {currentRoutes.map(({path, title, routes, heading}) => {
+      {currentRoutes.map(({path, title, routes, wip, heading}) => {
         const pagePath = path && removeFromLast(path, '.');
         const selected = slug === pagePath;
 
@@ -119,10 +123,13 @@ export function SidebarRouteTree({
               <SidebarLink
                 key={`${title}-${path}-${level}-link`}
                 href={pagePath}
+                isPending={pendingRoute === pagePath}
                 selected={selected}
                 level={level}
                 title={title}
+                wip={wip}
                 isExpanded={isExpanded}
+                isBreadcrumb={expandedPath === path}
                 hideArrow={isForceExpanded}
               />
               <CollapseWrapper duration={250} isExpanded={isExpanded}>
@@ -140,10 +147,12 @@ export function SidebarRouteTree({
         return (
           <li key={`${title}-${path}-${level}-link`}>
             <SidebarLink
+              isPending={pendingRoute === pagePath}
               href={path.startsWith('https://') ? path : pagePath}
               selected={selected}
               level={level}
               title={title}
+              wip={wip}
             />
           </li>
         );

@@ -2,7 +2,7 @@
  * Copyright (c) Facebook, Inc. and its affiliates.
  */
 
-import {useContext, Suspense} from 'react';
+import {useState, useRef, useContext, useEffect, Suspense} from 'react';
 import * as React from 'react';
 import cn from 'classnames';
 import NextLink from 'next/link';
@@ -19,6 +19,8 @@ import NavLink from './NavLink';
 import {SidebarContext} from 'components/Layout/useRouteMeta';
 import {SidebarRouteTree} from '../Sidebar/SidebarRouteTree';
 import type {RouteItem} from '../useRouteMeta';
+import sidebarHome from '../../../sidebarHome.json';
+import sidebarLearn from '../../../sidebarLearn.json';
 
 declare global {
   interface Window {
@@ -91,20 +93,33 @@ const lightIcon = (
 );
 
 export default function Nav() {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const scrollParentRef = React.useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const scrollParentRef = useRef<HTMLDivElement>(null);
+  const feedbackAutohideRef = useRef<any>(null);
   const section = useActiveSection();
   const {asPath} = useRouter();
+  const feedbackPopupRef = useRef<null | HTMLDivElement>(null);
 
   // In desktop mode, use the route tree for current route.
   let routeTree: RouteItem = useContext(SidebarContext);
   // In mobile mode, let the user switch tabs there and back without navigating.
   // Seed the tab state from the router, but keep it independent.
-  const [tab, setTab] = React.useState(section);
-  const [prevSection, setPrevSection] = React.useState(section);
+  const [tab, setTab] = useState(section);
+  const [prevSection, setPrevSection] = useState(section);
   if (prevSection !== section) {
     setPrevSection(section);
     setTab(section);
+  }
+  if (isOpen) {
+    switch (tab) {
+      case 'home':
+        routeTree = sidebarHome as RouteItem;
+        break;
+      case 'learn':
+        routeTree = sidebarLearn as RouteItem;
+        break;
+    }
   }
   // HACK. Fix up the data structures instead.
   if ((routeTree as any).routes.length === 1) {
@@ -112,7 +127,7 @@ export default function Nav() {
   }
 
   // While the overlay is open, disable body scroll.
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       const preferredScrollParent = scrollParentRef.current!;
       disableBodyScroll(preferredScrollParent);
@@ -123,13 +138,13 @@ export default function Nav() {
   }, [isOpen]);
 
   // Close the overlay on any navigation.
-  React.useEffect(() => {
+  useEffect(() => {
     setIsOpen(false);
   }, [asPath]);
 
   // Also close the overlay if the window gets resized past mobile layout.
   // (This is also important because we don't want to keep the body locked!)
-  React.useEffect(() => {
+  useEffect(() => {
     const media = window.matchMedia(`(max-width: 1023px)`);
     function closeIfNeeded() {
       if (!media.matches) {
@@ -142,6 +157,32 @@ export default function Nav() {
       media.removeEventListener('change', closeIfNeeded);
     };
   }, []);
+
+  function handleFeedback() {
+    clearTimeout(feedbackAutohideRef.current);
+    setShowFeedback(!showFeedback);
+  }
+
+  // Hide the Feedback widget on any click outside.
+  useEffect(() => {
+    if (!showFeedback) {
+      return;
+    }
+    function handleDocumentClickCapture(e: MouseEvent) {
+      if (!feedbackPopupRef.current!.contains(e.target as any)) {
+        e.stopPropagation();
+        e.preventDefault();
+        setShowFeedback(false);
+      }
+    }
+    document.addEventListener('click', handleDocumentClickCapture, {
+      capture: true,
+    });
+    return () =>
+      document.removeEventListener('click', handleDocumentClickCapture, {
+        capture: true,
+      });
+  }, [showFeedback]);
 
   function selectTab(nextTab: 'learn' | 'apis' | 'home') {
     setTab(nextTab);
@@ -218,10 +259,10 @@ export default function Nav() {
             className={cn(
               'inline-flex lg:hidden items-center rounded-full px-1.5 ml-4 lg:ml-6 relative top-px',
               {
-                'bg-card dark:bg-card-dark': false,
+                'bg-card dark:bg-card-dark': showFeedback,
               }
             )}
-            onClick={() => console.log('handleFeedback')}>
+            onClick={handleFeedback}>
             {feedbackIcon}
           </button>
           <div className="block dark:hidden">
@@ -229,10 +270,36 @@ export default function Nav() {
               type="button"
               aria-label="Use Dark Mode"
               onClick={() => {
-                //window.__setPreferredTheme('dark');
+                window.__setPreferredTheme('dark');
               }}
               className="flex lg:hidden items-center p-1 h-full ml-4 lg:ml-6">
               {darkIcon}
+            </button>
+          </div>
+          <div
+            ref={feedbackPopupRef}
+            className={cn(
+              'fixed top-12 right-0',
+              showFeedback ? 'block' : 'hidden'
+            )}>
+            <Feedback
+              onSubmit={() => {
+                clearTimeout(feedbackAutohideRef.current);
+                feedbackAutohideRef.current = setTimeout(() => {
+                  setShowFeedback(false);
+                }, 1000);
+              }}
+            />
+          </div>
+          <div className="hidden dark:block">
+            <button
+              type="button"
+              aria-label="Use Light Mode"
+              onClick={() => {
+                window.__setPreferredTheme('light');
+              }}
+              className="flex lg:hidden items-center p-1 h-full ml-4 lg:ml-6">
+              {lightIcon}
             </button>
           </div>
         </div>

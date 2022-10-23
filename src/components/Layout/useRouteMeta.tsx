@@ -12,11 +12,20 @@ import {useRouter} from 'next/router';
  * route object that is infinitely nestable.
  */
 
+export type RouteTag =
+  | 'foundation'
+  | 'intermediate'
+  | 'advanced'
+  | 'experimental'
+  | 'deprecated';
+
 export interface RouteItem {
   /** Page title (for the sidebar) */
   title: string;
   /** Optional page description for heading */
   description?: string;
+  /* Additional meta info for page tagging */
+  tags?: RouteTag[];
   /** Path to page */
   path?: string;
   /** Whether the entry is a heading */
@@ -48,6 +57,11 @@ export function useRouteMeta(rootRoute?: RouteItem) {
   const sidebarContext = useContext(SidebarContext);
   const routeTree = rootRoute || sidebarContext;
   const router = useRouter();
+  if (router.pathname === '/404') {
+    return {
+      breadcrumbs: [],
+    };
+  }
   const cleanedPath = router.asPath.split(/[\?\#]/)[0];
   const breadcrumbs = getBreadcrumbs(cleanedPath, routeTree);
   return {
@@ -57,7 +71,6 @@ export function useRouteMeta(rootRoute?: RouteItem) {
 }
 
 export const SidebarContext = createContext<RouteItem>({title: 'root'});
-
 
 // Performs a depth-first search to find the current route and its previous/next route
 function getRouteMeta(
