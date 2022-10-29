@@ -42,6 +42,10 @@ const Pitfall = ({children}: {children: React.ReactNode}) => (
   <ExpandableCallout type="pitfall">{children}</ExpandableCallout>
 );
 
+const Note = ({children}: {children: React.ReactNode}) => (
+  <ExpandableCallout type="note">{children}</ExpandableCallout>
+);
+
 const Blockquote = ({
   children,
   ...props
@@ -142,6 +146,7 @@ export const MDXComponents = {
   HomepageHero,
   Intro,
   LearnMore,
+  Note,
   Recap,
   Sandpack,
   TerminalBlock,
