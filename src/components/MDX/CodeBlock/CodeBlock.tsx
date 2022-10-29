@@ -5,6 +5,7 @@
 import cn from 'classnames';
 import {highlightTree} from '@codemirror/highlight';
 import {javascript} from '@codemirror/lang-javascript';
+import {html} from '@codemirror/lang-html';
 import {css} from '@codemirror/lang-css';
 import {HighlightStyle, tags} from '@codemirror/highlight';
 import rangeParser from 'parse-numeric-range';
@@ -19,6 +20,7 @@ interface InlineHiglight {
 
 const jsxLang = javascript({jsx: true, typescript: false});
 const cssLang = css();
+const htmlLang = html();
 
 const CodeBlock = function CodeBlock({
   children: {
@@ -39,6 +41,8 @@ const CodeBlock = function CodeBlock({
   let lang = jsxLang;
   if (className === 'language-css') {
     lang = cssLang;
+  } else if (className === 'language-html') {
+    lang = htmlLang;
   }
   const tree = lang.language.parser.parse(code);
   let tokenStarts = new Map();
@@ -142,6 +146,10 @@ function classNameToken(name: string): string {
 
 function getSyntaxHighlight(theme: any): HighlightStyle {
   return HighlightStyle.define([
+    {tag: tags.link, textdecorator: 'underline'},
+    {tag: tags.emphasis, fontStyle: 'italic'},
+    {tag: tags.strong, fontWeight: 'bold'},
+
     {
       tag: tags.keyword,
       class: classNameToken('keyword'),
@@ -153,6 +161,12 @@ function getSyntaxHighlight(theme: any): HighlightStyle {
     {
       tag: tags.tagName,
       class: classNameToken('tag'),
+    },
+    {tag: tags.variableName, class: classNameToken('plain')},
+    {
+      // Highlight function call
+      tag: tags.function(tags.variableName),
+      class: classNameToken('definition'),
     },
     {
       // Highlight function definition differently (eg: functional component def in React)
