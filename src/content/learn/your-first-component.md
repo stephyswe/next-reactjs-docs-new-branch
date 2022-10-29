@@ -231,3 +231,229 @@ You've just gotten your first taste of React! Let's recap some key points.
   2. They return JSX markup.
 
 </Recap>
+
+
+
+<Challenges>
+
+#### Export the component {/*export-the-component*/}
+
+This sandbox doesn't work because the root component is not exported:
+
+<Sandpack>
+
+```js
+function Profile() {
+  return (
+    <img
+      src="https://i.imgur.com/lICfvbD.jpg"
+      alt="Aklilu Lemma"
+    />
+  );
+}
+```
+
+```css
+img { height: 181px; }
+```
+
+</Sandpack>
+
+Try to fix it yourself before looking at the solution!
+
+<Solution>
+
+Add `export default` before the function definition like so:
+
+<Sandpack>
+
+```js
+export default function Profile() {
+  return (
+    <img
+      src="https://i.imgur.com/lICfvbD.jpg"
+      alt="Aklilu Lemma"
+    />
+  );
+}
+```
+
+```css
+img { height: 181px; }
+```
+
+</Sandpack>
+
+You might be wondering why writing `export` alone is not enough to fix this example. You can learn the difference between `export` and `export default` in [Importing and Exporting Components.](/learn/importing-and-exporting-components)
+
+</Solution>
+
+#### Fix the return statement {/*fix-the-return-statement*/}
+
+Something isn't right about this `return` statement. Can you fix it?
+
+<Hint>
+
+You may get an "Unexpected token" error while trying to fix this. In that case, check the that semicolon appears *after* the closing parenthesis. Leaving a semicolon inside `return ( )` will cause an error.
+
+</Hint>
+
+
+<Sandpack>
+
+```js
+export default function Profile() {
+  return
+    <img src="https://i.imgur.com/jA8hHMpm.jpg" alt="Katsuko Saruhashi" />;
+}
+```
+
+```css
+img { height: 180px; }
+```
+
+</Sandpack>
+
+<Solution>
+
+You can fix this component by moving the return statement to one line like so:
+
+<Sandpack>
+
+```js
+export default function Profile() {
+  return <img src="https://i.imgur.com/jA8hHMpm.jpg" alt="Katsuko Saruhashi" />;
+}
+```
+
+```css
+img { height: 180px; }
+```
+
+</Sandpack>
+
+Or by wrapping the returned JSX markup in parentheses that open right after `return`:
+
+<Sandpack>
+
+```js
+export default function Profile() {
+  return (
+    <img 
+      src="https://i.imgur.com/jA8hHMpm.jpg" 
+      alt="Katsuko Saruhashi" 
+    />
+  );
+}
+```
+
+```css
+img { height: 180px; }
+```
+
+</Sandpack>
+
+</Solution>
+
+#### Spot the mistake {/*spot-the-mistake*/}
+
+Something's wrong with how the `Profile` component is declared and used. Can you spot the mistake? (Try to remember how React distinguishes components from the regular HTML tags!)
+
+<Sandpack>
+
+```js
+function profile() {
+  return (
+    <img
+      src="https://i.imgur.com/QIrZWGIs.jpg"
+      alt="Alan L. Hart"
+    />
+  );
+}
+
+export default function Gallery() {
+  return (
+    <section>
+      <h1>Amazing scientists</h1>
+      <profile />
+      <profile />
+      <profile />
+    </section>
+  );
+}
+```
+
+```css
+img { margin: 0 10px 10px 0; height: 90px; }
+```
+
+</Sandpack>
+
+<Solution>
+
+React component names must start with a capital letter.
+
+Change `function profile()` to `function Profile()`, and then change every `<profile />` to `<Profile />`:
+
+<Sandpack>
+
+```js
+function Profile() {
+  return (
+    <img
+      src="https://i.imgur.com/QIrZWGIs.jpg"
+      alt="Alan L. Hart"
+    />
+  );
+}
+
+export default function Gallery() {
+  return (
+    <section>
+      <h1>Amazing scientists</h1>
+      <Profile />
+      <Profile />
+      <Profile />
+    </section>
+  );
+}
+```
+
+```css
+img { margin: 0 10px 10px 0; }
+```
+
+</Sandpack>
+
+</Solution>
+
+#### Your own component {/*your-own-component*/}
+
+Write a component from scratch. You can give it any valid name and return any markup. If you're out of ideas, you can write a `Congratulations` component that shows `<h1>Good job!</h1>`. Don't forget to export it!
+
+<Sandpack>
+
+```js
+// Write your component below!
+
+```
+
+</Sandpack>
+
+<Solution>
+
+<Sandpack>
+
+```js
+export default function Congratulations() {
+  return (
+    <h1>Good job!</h1>
+  );
+}
+```
+
+</Sandpack>
+
+</Solution>
+
+</Challenges>

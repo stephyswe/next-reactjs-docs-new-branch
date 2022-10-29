@@ -25,6 +25,7 @@ function wrapChildrenInMaxWidthContainers(children) {
   let fullWidthTypes = [
     'Sandpack',
     'FullWidth',
+    'Challenges',
   ];
   let wrapQueue = [];
   let finalChildren = [];
@@ -59,11 +60,18 @@ function getTableOfContents(children) {
   const anchors = Children.toArray(children)
     .filter((child) => {
       if (child.type) {
-        return ['h1', 'h2', 'h3', 'Recap'].includes(child.type);
+        return ['h1', 'h2', 'h3', 'Challenges', 'Recap'].includes(child.type);
       }
       return false;
     })
     .map((child) => {
+      if (child.type === 'Challenges') {
+        return {
+          url: '#challenges',
+          depth: 2,
+          text: 'Challenges',
+        };
+      }
       if (child.type === 'Recap') {
         return {
           url: '#recap',

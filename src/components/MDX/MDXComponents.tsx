@@ -20,6 +20,7 @@ import Diagram from './Diagram';
 import DiagramGroup from './DiagramGroup';
 import SimpleCallout from './SimpleCallout';
 import TerminalBlock from './TerminalBlock';
+import {Challenges, Hint, Solution} from './Challenges';
 import {IconNavArrow} from '../Icon/IconNavArrow';
 import ButtonLink from 'components/ButtonLink';
 
@@ -144,7 +145,10 @@ export const MDXComponents = {
   Recap,
   Sandpack,
   TerminalBlock,
-  YouWillLearn
+  YouWillLearn,
+  Challenges,
+  Hint,
+  Solution,
 };
 
 for (let key in MDXComponents) {
