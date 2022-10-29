@@ -5,6 +5,7 @@
   "license": "CC",
   "scripts": {
     "analyze": "ANALYZE=true next build",
+    "predev": "rimraf ./node_modules/.cache/",
     "dev": "PORT=3001 next-remote-watch ./src/content",
     "build": "next build && node ./scripts/downloadFonts.js",
     "lint": "next lint",
