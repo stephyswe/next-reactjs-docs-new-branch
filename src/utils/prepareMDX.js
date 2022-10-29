@@ -59,11 +59,18 @@ function getTableOfContents(children) {
   const anchors = Children.toArray(children)
     .filter((child) => {
       if (child.type) {
-        return ['h1', 'h2', 'h3'].includes(child.type);
+        return ['h1', 'h2', 'h3', 'Recap'].includes(child.type);
       }
       return false;
     })
     .map((child) => {
+      if (child.type === 'Recap') {
+        return {
+          url: '#recap',
+          depth: 2,
+          text: 'Recap',
+        };
+      }
       return {
         url: '#' + child.props.id,
         depth: (child.type && parseInt(child.type.replace('h', ''), 0)) ?? 0,

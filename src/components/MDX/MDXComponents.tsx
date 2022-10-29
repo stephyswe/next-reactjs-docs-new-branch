@@ -10,10 +10,11 @@ import ConsoleBlock from './ConsoleBlock';
 import ExpandableCallout from './ExpandableCallout';
 import ExpandableExample from './ExpandableExample';
 import {H2, H3, H4} from './Heading';
+import HomepageHero from './HomepageHero';
 import InlineCode from './InlineCode';
 import Intro from './Intro';
 import Link from './Link';
-import HomepageHero from './HomepageHero';
+import Recap from './Recap';
 import Sandpack from './Sandpack';
 import Diagram from './Diagram';
 import DiagramGroup from './DiagramGroup';
@@ -140,6 +141,7 @@ export const MDXComponents = {
   HomepageHero,
   Intro,
   LearnMore,
+  Recap,
   Sandpack,
   TerminalBlock,
   YouWillLearn
