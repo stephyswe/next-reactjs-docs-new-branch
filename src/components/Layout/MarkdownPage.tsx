@@ -8,6 +8,8 @@ import PageHeading from 'components/PageHeading';
 import {useRouteMeta} from './useRouteMeta';
 import {TocContext} from '../MDX/TocContext';
 
+import(/* webpackPrefetch: true */ '../MDX/CodeBlock/CodeBlock');
+
 export interface MarkdownProps<Frontmatter> {
   meta: Frontmatter & {description?: string};
   children?: React.ReactNode;
@@ -19,11 +21,15 @@ export interface MarkdownProps<Frontmatter> {
 }
 
 export function MarkdownPage<
-T extends {title: string; status?: string} = {title: string; status?: string}
+  T extends {title: string; status?: string} = {title: string; status?: string}
 >({children, meta, toc}: MarkdownProps<T>) {
   const {route, nextRoute, prevRoute} = useRouteMeta();
   const title = meta.title || route?.title || '';
   const description = meta.description || route?.description || '';
+
+  if (!route) {
+    console.error('This page was not added to one of the sidebar JSON files.');
+  }
   const isHomePage = route?.path === '/';
   return (
     <>
@@ -32,6 +38,7 @@ T extends {title: string; status?: string} = {title: string; status?: string}
           <PageHeading
             title={title}
             description={description}
+            tags={route?.tags}
           />
         )}
         <div className="px-5 sm:px-12">
@@ -46,5 +53,5 @@ T extends {title: string; status?: string} = {title: string; status?: string}
         </div>
       </div>
     </>
-  )
+  );
 }
