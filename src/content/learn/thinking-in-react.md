@@ -457,6 +457,7 @@ function SearchBar({ filterText, inStockOnly }) {
 
 However, you haven't added any code to respond to the user actions like typing yet. This will be your final step.
 
+
 ## Step 5: Add inverse data flow {/*step-5-add-inverse-data-flow*/}
 
 Currently your app renders correctly with props and state flowing down the hierarchy. But to change the state according to user input, you will need to support data flowing the other way: the form components deep in the hierarchy need to update the state in `FilterableProductTable`. 

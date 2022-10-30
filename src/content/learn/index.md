@@ -94,7 +94,6 @@ function AboutPage() {
 
 If you have a lot of HTML to port to JSX, you can use an [online converter.](https://transform.tools/html-to-jsx)
 
-
 ## Adding styles {/*adding-styles*/}
 
 In React, you specify a CSS class with `className`. It works the same way as HTML [`class`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class) attribute:
@@ -138,7 +137,6 @@ return (
 ```
 
 You can put more complex expressions inside the JSX curly braces too, for example, [string concatenation](https://javascript.info/operators#string-concatenation-with-binary):
-
 
 <Sandpack>
 
@@ -538,4 +536,3 @@ button {
 By now, you know the basics of how to write React code!
 
 Head to [Thinking in React](/learn/thinking-in-react) to see how it feels to build a UI with React in practice.
-
