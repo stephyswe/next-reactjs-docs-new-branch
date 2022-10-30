@@ -38,6 +38,7 @@ const CodeBlock = function CodeBlock({
   className?: string;
   noMargin?: boolean;
 }) {
+  code = code.trimEnd();
   let lang = jsxLang;
   if (className === 'language-css') {
     lang = cssLang;
@@ -52,6 +53,7 @@ const CodeBlock = function CodeBlock({
     tokenStarts.set(from, className);
     tokenEnds.set(to, className);
   });
+
   const highlightedLines = new Map();
   const lines = code.split('\n');
   const lineDecorators = getLineDecorators(code, meta);
@@ -167,7 +169,21 @@ const CodeBlock = function CodeBlock({
       buffer += code[i];
     }
   }
-  lineOutput.push(buffer);
+  if (currentDecorator) {
+    lineOutput.push(
+      <span key={'end/d'} className={currentDecorator}>
+        {buffer}
+      </span>
+    );
+  } else if (currentToken) {
+    lineOutput.push(
+      <span key={'end/t'} className={currentToken}>
+        {buffer}
+      </span>
+    );
+  } else {
+    lineOutput.push(buffer);
+  }
   finalOutput.push(
     <div
       key={lineIndex}
