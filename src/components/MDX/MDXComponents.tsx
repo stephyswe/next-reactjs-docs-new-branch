@@ -38,7 +38,9 @@ const LI = (p: JSX.IntrinsicElements['li']) => (
 const UL = (p: JSX.IntrinsicElements['ul']) => (
   <ul className="ml-6 my-3 list-disc" {...p} />
 );
-
+const Wip = ({children}: {children: React.ReactNode}) => (
+  <ExpandableCallout type="wip">{children}</ExpandableCallout>
+);
 const Pitfall = ({children}: {children: React.ReactNode}) => (
   <ExpandableCallout type="pitfall">{children}</ExpandableCallout>
 );
@@ -286,6 +288,7 @@ export const MDXComponents = {
     return <div className="max-w-4xl ml-0 2xl:mx-auto">{children}</div>;
   },
   Pitfall,
+  Wip,
   HomepageHero,
   Illustration,
   IllustrationBlock,
