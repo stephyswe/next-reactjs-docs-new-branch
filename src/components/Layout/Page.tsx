@@ -40,7 +40,7 @@ export function Page({children, toc}: PageProps) {
           {/* No fallback UI so need to be careful not to suspend directly inside. */}
           <Suspense fallback={null}>
             <main className="min-w-0">
-            <div className="lg:hidden h-16 mb-2" />
+              <div className="lg:hidden h-16 mb-2" />
               <article className="break-words" key={asPath}>
                 {children}
               </article>
