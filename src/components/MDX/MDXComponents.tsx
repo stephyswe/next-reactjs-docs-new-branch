@@ -92,6 +92,30 @@ function LearnMore({
   );
 }
 
+function Math({children}: {children: any}) {
+  return (
+    <span
+      style={{
+        fontFamily: 'STIXGeneral-Regular, Georgia, serif',
+        fontSize: '1.2rem',
+      }}>
+      {children}
+    </span>
+  );
+}
+
+function MathI({children}: {children: any}) {
+  return (
+    <span
+      style={{
+        fontFamily: 'STIXGeneral-Italic, Georgia, serif',
+        fontSize: '1.2rem',
+      }}>
+      {children}
+    </span>
+  );
+}
+
 function YouWillLearn({
   children,
   isChapter,
@@ -217,6 +241,8 @@ export const MDXComponents = {
   Illustration,
   Intro,
   LearnMore,
+  Math,
+  MathI,
   Note,
   Recap,
   Sandpack,
