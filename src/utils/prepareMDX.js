@@ -25,6 +25,8 @@ function wrapChildrenInMaxWidthContainers(children) {
   let fullWidthTypes = [
     'Sandpack',
     'FullWidth',
+    'Illustration',
+    'IllustrationBlock',
     'Challenges',
   ];
   let wrapQueue = [];
