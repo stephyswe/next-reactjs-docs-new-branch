@@ -53,9 +53,32 @@ const CodeBlock = function CodeBlock({
     tokenEnds.set(to, className);
   });
   const highlightedLines = new Map();
+  const lines = code.split('\n');
   const lineDecorators = getLineDecorators(code, meta);
   for (let decorator of lineDecorators) {
     highlightedLines.set(decorator.line - 1, decorator.className);
+  }
+
+  const inlineDecorators = getInlineDecorators(code, meta);
+  const decoratorStarts = new Map();
+  const decoratorEnds = new Map();
+  for (let decorator of inlineDecorators) {
+    // Find where inline highlight starts and ends.
+    let decoratorStart = 0;
+    for (let i = 0; i < decorator.line - 1; i++) {
+      decoratorStart += lines[i].length + 1;
+    }
+    decoratorStart += decorator.startColumn;
+    const decoratorEnd =
+      decoratorStart + (decorator.endColumn - decorator.startColumn);
+    if (decoratorStarts.has(decoratorStart)) {
+      throw Error('Already opened decorator at ' + decoratorStart);
+    }
+    decoratorStarts.set(decoratorStart, decorator.className);
+    if (decoratorEnds.has(decoratorEnd)) {
+      throw Error('Already closed decorator at ' + decoratorEnd);
+    }
+    decoratorEnds.set(decoratorEnd, decorator.className);
   }
 
   // Produce output based on tokens and decorators.
@@ -84,8 +107,43 @@ const CodeBlock = function CodeBlock({
       }
       currentToken = null;
     }
-
+    if (decoratorEnds.has(i)) {
+      if (!currentDecorator) {
+        throw Error(
+          'Cannot close decorator at ' + i + ' because it was not open.'
+        );
+      }
+      lineOutput.push(
+        <span key={i + '/d'} className={currentDecorator}>
+          {buffer}
+        </span>
+      );
+      buffer = '';
+      currentDecorator = null;
+    }
+    if (decoratorStarts.has(i)) {
+      if (currentDecorator) {
+        throw Error(
+          'Cannot open decorator at ' + i + ' before closing last one.'
+        );
+      }
+      if (currentToken) {
+        lineOutput.push(
+          <span key={i + 'd'} className={currentToken}>
+            {buffer}
+          </span>
+        );
+        buffer = '';
+      } else {
+        lineOutput.push(buffer);
+        buffer = '';
+      }
+      currentDecorator = decoratorStarts.get(i);
+    }
     if (tokenStarts.has(i)) {
+      if (currentToken) {
+        throw Error('Cannot open token at ' + i + ' before closing last one.');
+      }
       currentToken = tokenStarts.get(i);
       if (!currentDecorator) {
         lineOutput.push(buffer);
@@ -212,6 +270,41 @@ function getLineDecorators(
   return highlightedLineConfig;
 }
 
+function getInlineDecorators(
+  code: string,
+  meta: string
+): Array<{
+  step: number;
+  line: number;
+  startColumn: number;
+  endColumn: number;
+  className: string;
+}> {
+  if (!meta) {
+    return [];
+  }
+  const inlineHighlightLines = getInlineHighlights(meta, code);
+  const inlineHighlightConfig = inlineHighlightLines.map(
+    (line: InlineHiglight) => ({
+      ...line,
+      elementAttributes: {'data-step': `${line.step}`},
+      className: cn(
+        'code-step bg-opacity-10 dark:bg-opacity-20 relative rounded px-1 py-[1.5px] border-b-[2px] border-opacity-60',
+        {
+          'bg-blue-40 border-blue-40 text-blue-60 dark:text-blue-30':
+            line.step === 1,
+          'bg-yellow-40 border-yellow-40 text-yellow-60 dark:text-yellow-30':
+            line.step === 2,
+          'bg-purple-40 border-purple-40 text-purple-60 dark:text-purple-30':
+            line.step === 3,
+          'bg-green-40 border-green-40 text-green-60 dark:text-green-30':
+            line.step === 4,
+        }
+      ),
+    })
+  );
+  return inlineHighlightConfig;
+}
 
 /**
  *
@@ -231,4 +324,50 @@ function getHighlightLines(meta: string): number[] {
     return [];
   }
   return rangeParser(parsedMeta[1]);
+}
+
+/**
+ *
+ * @param meta string provided after the language in a markdown block
+ * @returns InlineHighlight[]
+ * @example
+ * ```js {1-3,7} [[1, 1, 'count'], [2, 4, 'setCount']] App.js active
+ * ...
+ * ```
+ *
+ * -> The meta is `{1-3,7} [[1, 1, 'count', [2, 4, 'setCount']] App.js active`
+ */
+function getInlineHighlights(meta: string, code: string) {
+  const INLINE_HIGHT_REGEX = /(\[\[.*\]\])/;
+  const parsedMeta = INLINE_HIGHT_REGEX.exec(meta);
+  if (!parsedMeta) {
+    return [];
+  }
+
+  const lines = code.split('\n');
+  const encodedHiglights = JSON.parse(parsedMeta[1]);
+  return encodedHiglights.map(([step, lineNo, substr, fromIndex]: any[]) => {
+    const line = lines[lineNo - 1];
+    let index = line.indexOf(substr);
+    const lastIndex = line.lastIndexOf(substr);
+    if (index !== lastIndex) {
+      if (fromIndex === undefined) {
+        throw Error(
+          "Found '" +
+            substr +
+            "' twice. Specify fromIndex as the fourth value in the tuple."
+        );
+      }
+      index = line.indexOf(substr, fromIndex);
+    }
+    if (index === -1) {
+      throw Error("Could not find: '" + substr + "'");
+    }
+    return {
+      step,
+      line: lineNo,
+      startColumn: index,
+      endColumn: index + substr.length,
+    };
+  });
 }
