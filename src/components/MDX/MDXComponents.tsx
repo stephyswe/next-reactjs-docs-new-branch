@@ -115,6 +115,76 @@ function LinkWithTodo({href, children, ...props}: JSX.IntrinsicElements['a']) {
   );
 }
 
+function AuthorCredit({
+  author = 'Rachel Lee Nabors',
+  authorLink = 'http://rachelnabors.com/',
+}: {
+  author: string;
+  authorLink: string;
+}) {
+  return (
+    <div className="sr-only group-hover:not-sr-only group-focus-within:not-sr-only hover:sr-only">
+      <p className="bg-card dark:bg-card-dark text-center text-sm text-secondary dark:text-secondary-dark leading-tight dark:text-secondary-dark p-2 rounded-lg absolute left-1/2 top-0 -translate-x-1/2 -translate-y-full group-hover:flex group-hover:opacity-100 after:content-[''] after:absolute after:left-1/2 after:top-[95%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-card after:dark:border-t-card-dark opacity-0 transition-opacity duration-300">
+        <cite>
+          Illustrated by{' '}
+          {authorLink ? (
+            <a
+              target="_blank"
+              rel="noreferrer"
+              className="text-link dark:text-link-dark"
+              href={authorLink}>
+              {author}
+            </a>
+          ) : (
+            author
+          )}
+        </cite>
+      </p>
+    </div>
+  );
+}
+
+const IllustrationContext = React.createContext<{
+  isInBlock?: boolean;
+}>({
+  isInBlock: false,
+});
+
+function Illustration({
+  caption,
+  src,
+  alt,
+  author,
+  authorLink,
+}: {
+  caption: string;
+  src: string;
+  alt: string;
+  author: string;
+  authorLink: string;
+}) {
+  const {isInBlock} = React.useContext(IllustrationContext);
+
+  return (
+    <div className="relative group before:absolute before:-inset-y-16 before:inset-x-0 my-16 mx-0 2xl:mx-auto max-w-4xl 2xl:max-w-6xl">
+      <figure className="my-8 flex justify-center">
+        <img
+          src={src}
+          alt={alt}
+          style={{maxHeight: 300}}
+          className="bg-white rounded-lg"
+        />
+        {caption ? (
+          <figcaption className="text-center leading-tight mt-4">
+            {caption}
+          </figcaption>
+        ) : null}
+      </figure>
+      {!isInBlock && <AuthorCredit author={author} authorLink={authorLink} />}
+    </div>
+  );
+}
+
 export const MDXComponents = {
   p: P,
   blockquote: Blockquote,
@@ -144,6 +214,7 @@ export const MDXComponents = {
   },
   Pitfall,
   HomepageHero,
+  Illustration,
   Intro,
   LearnMore,
   Note,
