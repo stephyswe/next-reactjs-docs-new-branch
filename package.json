@@ -40,7 +40,10 @@
     "react-collapsed": "npm:@gaearon/react-collapsed@3.1.0-forked.1",
     "react-dom": "0.0.0-experimental-cb5084d1c-20220924",
     "remark-frontmatter": "^4.0.1",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "sass": "^1.55.0",
+    "styled-components": "^5.3.6",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -56,6 +59,7 @@
     "@types/parse-numeric-range": "^0.0.1",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
     "asyncro": "^3.0.0",

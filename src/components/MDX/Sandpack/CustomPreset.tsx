@@ -9,7 +9,7 @@ import {
   SandpackCodeEditor,
   // SandpackReactDevTools,
   SandpackLayout,
-} from '@codesandbox/sandpack-react';
+} from '../../../sandpack-react/src';
 import cn from 'classnames';
 
 import {IconChevron} from 'components/Icon/IconChevron';
@@ -17,13 +17,16 @@ import {NavigationBar} from './NavigationBar';
 import {Preview} from './Preview';
 
 import {useSandpackLint} from './useSandpackLint';
+//import {list_to_tree} from '../../../utils/fileTree';
 
 export const CustomPreset = memo(function CustomPreset({
+  siteId,
   showDevTools,
   onDevToolsLoad,
   devToolsLoaded,
   providedFiles,
 }: {
+  siteId: string;
   showDevTools: boolean;
   devToolsLoaded: boolean;
   onDevToolsLoad: () => void;
@@ -41,6 +44,7 @@ export const CustomPreset = memo(function CustomPreset({
   const isExpandable = lineCount > 16;
   return (
     <SandboxShell
+      siteId={siteId}
       showDevTools={showDevTools}
       onDevToolsLoad={onDevToolsLoad}
       devToolsLoaded={devToolsLoaded}
@@ -53,6 +57,7 @@ export const CustomPreset = memo(function CustomPreset({
 });
 
 const SandboxShell = memo(function SandboxShell({
+  siteId,
   showDevTools,
   onDevToolsLoad,
   devToolsLoaded,
@@ -68,11 +73,21 @@ const SandboxShell = memo(function SandboxShell({
   lintErrors: Array<any>;
   lintExtensions: Array<any>;
   isExpandable: boolean;
+  siteId: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  /*   const [treeFiles, setTreeFiles] = useState([]);
+  useEffect(() => {
+    setTreeFiles(list_to_tree(providedFiles));
+  }, [providedFiles]); */
+  const [showEditor, setShowEditor] = useState(true);
   return (
     <>
+      {/* {treeFiles.length ? (
+        <Tree data={treeFiles} onNodeClick={handleClick} />
+      ) : null} */}
+      {/* <button onClick={() => setShowEditor(!showEditor)}>Hide/Show</button> */}
       <div
         className="shadow-lg dark:shadow-lg-dark rounded-lg"
         ref={containerRef}>
@@ -83,8 +98,10 @@ const SandboxShell = memo(function SandboxShell({
             !(isExpandable || isExpanded) && 'rounded-b-lg overflow-hidden',
             isExpanded && 'sp-layout-expanded'
           )}>
-          <Editor lintExtensions={lintExtensions} />
+          {showEditor ? <Editor lintExtensions={lintExtensions} /> : null}
+          {/* <CodePreview /> */}
           <Preview
+            siteId={siteId}
             className="order-last xl:order-2"
             isExpanded={isExpanded}
             lintErrors={lintErrors}

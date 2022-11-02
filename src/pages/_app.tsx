@@ -11,6 +11,12 @@ import '@docsearch/css';
 import '../styles/index.css';
 import '../styles/sandpack.css';
 
+// extra
+import '../styles/extra/styles.scss';
+import '../styles/extra/code-preview.scss';
+import '../styles/extra/longCss.css';
+import '../styles/extra/fineCss.css';
+
 if (typeof window !== 'undefined') {
   if (process.env.NODE_ENV === 'production') {
     ga('create', process.env.NEXT_PUBLIC_GA_TRACKING_ID, 'auto');

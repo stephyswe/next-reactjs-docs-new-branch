@@ -1,0 +1,15 @@
+.VerticalLine {
+  position: relative;
+}
+
+.VerticalLine:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px; /* just to hide 1px peek */
+  left: 1px;
+  width: 0;
+  height: 100%;
+  border: 1px solid red;
+  z-index: -1;
+}

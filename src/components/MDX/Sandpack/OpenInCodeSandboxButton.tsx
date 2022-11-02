@@ -2,7 +2,7 @@
  * Copyright (c) Facebook, Inc. and its affiliates.
  */
 
-import {UnstyledOpenInCodeSandboxButton} from '@codesandbox/sandpack-react';
+import {UnstyledOpenInCodeSandboxButton} from '../../../sandpack-react/src';
 import {IconNewPage} from '../../Icon/IconNewPage';
 
 export const OpenInCodeSandboxButton = () => {

@@ -8,7 +8,7 @@ import {
   useSandpack,
   LoadingOverlay,
   SandpackStack,
-} from '@codesandbox/sandpack-react';
+} from '../../../sandpack-react/src';
 import cn from 'classnames';
 import {Error} from './Error';
 import {SandpackConsole} from './Console';
@@ -21,6 +21,7 @@ const generateRandomId = (): string =>
   Math.floor(Math.random() * 10000).toString();
 
 type CustomPreviewProps = {
+  siteId: string;
   className?: string;
   customStyle?: Record<string, unknown>;
   isExpanded: boolean;
@@ -40,6 +41,7 @@ function useDebounced(value: any): any {
 }
 
 export function Preview({
+  siteId,
   customStyle,
   isExpanded,
   className,
@@ -185,24 +187,12 @@ export function Preview({
               : undefined,
             top: isExpanded ? '2rem' : undefined,
           }}>
-          <iframe
-            ref={iframeRef}
-            className={cn(
-              'rounded-t-none bg-white md:shadow-md sm:rounded-lg w-full max-w-full',
-              // We can't *actually* hide content because that would
-              // break calculating the computed height in the iframe
-              // (which we're using for autosizing). This is noticeable
-              // if you make a compiler error and then fix it with code
-              // that expands the content. You want to measure that.
-              hideContent
-                ? 'absolute opacity-0 pointer-events-none'
-                : 'opacity-100'
-            )}
-            title="Sandbox Preview"
-            style={{
-              height: iframeComputedHeight || '100%',
-              zIndex: isExpanded ? 'initial' : -1,
-            }}
+          <Iframe
+            siteId={siteId}
+            iframeRef={iframeRef}
+            hideContent={hideContent}
+            iframeComputedHeight={iframeComputedHeight}
+            isExpanded={isExpanded}
           />
         </div>
         {error && (
@@ -224,5 +214,42 @@ export function Preview({
       </div>
       <SandpackConsole visible={!error} />
     </SandpackStack>
+  );
+}
+
+function Iframe({
+  siteId,
+  iframeRef,
+  hideContent,
+  iframeComputedHeight,
+  isExpanded,
+}: any) {
+  return (
+    <>
+      {siteId ? (
+        <iframe src={siteId} width="100%" height="400px" />
+      ) : (
+        <iframe
+          ref={iframeRef}
+          className={cn(
+            'rounded-t-none bg-white md:shadow-md sm:rounded-lg w-full max-w-full',
+            // We can't *actually* hide content because that would
+            // break calculating the computed height in the iframe
+            // (which we're using for autosizing). This is noticeable
+            // if you make a compiler error and then fix it with code
+            // that expands the content. You want to measure that.
+            hideContent
+              ? 'absolute opacity-0 pointer-events-none'
+              : 'opacity-100'
+          )}
+          title="Sandbox Preview"
+          style={{
+            display: siteId ? 'contents' : 'inherit',
+            height: iframeComputedHeight || '100%',
+            zIndex: isExpanded ? 'initial' : -1,
+          }}
+        />
+      )}
+    </>
   );
 }

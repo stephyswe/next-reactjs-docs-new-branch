@@ -4,13 +4,14 @@
 
 import {Children, useState} from 'react';
 import * as React from 'react';
-import {SandpackProvider} from '@codesandbox/sandpack-react';
+import {SandpackProvider} from '../../../sandpack-react/src';
 import {SandpackLogLevel} from '@codesandbox/sandpack-client';
 import {CustomPreset} from './CustomPreset';
 import {createFileMap} from './createFileMap';
 import {CustomTheme} from './Themes';
 
 type SandpackProps = {
+  siteId: string;
   children: React.ReactNode;
   autorun?: boolean;
   showDevTools?: boolean;
@@ -91,6 +92,7 @@ function SandpackRoot(props: SandpackProps) {
           logLevel: SandpackLogLevel.None,
         }}>
         <CustomPreset
+          siteId={props.siteId}
           showDevTools={showDevTools}
           onDevToolsLoad={() => setDevToolsLoaded(true)}
           devToolsLoaded={devToolsLoaded}

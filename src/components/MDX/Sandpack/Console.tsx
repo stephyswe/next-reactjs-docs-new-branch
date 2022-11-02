@@ -5,7 +5,7 @@ import cn from 'classnames';
 import {useState, useRef, useEffect} from 'react';
 import {IconChevron} from 'components/Icon/IconChevron';
 
-import {SandpackCodeViewer, useSandpack} from '@codesandbox/sandpack-react';
+import {SandpackCodeViewer, useSandpack} from '../../../sandpack-react/src';
 import type {SandpackMessageConsoleMethods} from '@codesandbox/sandpack-client';
 
 const getType = (

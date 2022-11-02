@@ -25,6 +25,10 @@
         {
           "title": "Blog",
           "path": "https://reactjs.org/blog"
+        },
+        {
+          "title": "Sandbox",
+          "path": "/sandbox"
         }
       ]
     }

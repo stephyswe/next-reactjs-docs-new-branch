@@ -4,6 +4,7 @@
 
 import {Suspense} from 'react';
 import * as React from 'react';
+import cn from 'classnames';
 import {useRouter} from 'next/router';
 import {Nav} from './Nav';
 import {RouteItem, SidebarContext} from './useRouteMeta';
@@ -33,11 +34,12 @@ export function Page({children, toc}: PageProps) {
       routeTree = sidebarLearn as RouteItem;
       break;
   }
+  const [show, setShow] = React.useState(false)
   return (
     <>
       <SocialBanner />
       <SidebarContext.Provider value={routeTree}>
-        <div className="grid grid-cols-only-content lg:grid-cols-sidebar-content 2xl:grid-cols-sidebar-content-toc">
+      <div className="grid grid-cols-only-content lg:grid-cols-sidebar-content 2xl:grid-cols-sidebar-content-toc">
           <div className="fixed lg:sticky top-0 left-0 right-0 py-0 shadow lg:shadow-none z-50">
             <Nav />
           </div>

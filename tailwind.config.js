@@ -50,6 +50,8 @@ module.exports = {
       gridTemplateColumns: {
         'sidebar-content': '20rem auto',
         'sidebar-content-toc': '20rem auto 20rem',
+        'sidebar-sticky-content-toc': '1rem 20rem auto 20rem',
+        'sidebar-sticky-content-toc-show': '1rem auto',
       },
     },
   },
