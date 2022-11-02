@@ -16,12 +16,14 @@ import HomepageHero from './HomepageHero';
 import InlineCode from './InlineCode';
 import Intro from './Intro';
 import Link from './Link';
+import {PackageImport} from './PackageImport';
 import Recap from './Recap';
 import Sandpack from './Sandpack';
 import Diagram from './Diagram';
 import DiagramGroup from './DiagramGroup';
 import SimpleCallout from './SimpleCallout';
 import TerminalBlock from './TerminalBlock';
+import YouWillLearnCard from './YouWillLearnCard';
 import {Challenges, Hint, Solution} from './Challenges';
 import {IconNavArrow} from '../Icon/IconNavArrow';
 import ButtonLink from 'components/ButtonLink';
@@ -320,10 +322,12 @@ export const MDXComponents = {
   Math,
   MathI,
   Note,
+  PackageImport,
   Recap,
   Sandpack,
   TerminalBlock,
   YouWillLearn,
+  YouWillLearnCard,
   Challenges,
   Hint,
   Solution,
