@@ -2,7 +2,7 @@
  * Copyright (c) Facebook, Inc. and its affiliates.
  */
 
-import {Children} from 'react'
+import {Children, useContext, useMemo} from 'react';
 import * as React from 'react';
 import cn from 'classnames';
 
@@ -27,6 +27,8 @@ import YouWillLearnCard from './YouWillLearnCard';
 import {Challenges, Hint, Solution} from './Challenges';
 import {IconNavArrow} from '../Icon/IconNavArrow';
 import ButtonLink from 'components/ButtonLink';
+import {TocContext} from './TocContext';
+import type {Toc, TocItem} from './TocContext';
 
 function CodeStep({children, step}: {children: any; step: number}) {
   return (
@@ -63,13 +65,16 @@ const LI = (p: JSX.IntrinsicElements['li']) => (
 const UL = (p: JSX.IntrinsicElements['ul']) => (
   <ul className="ml-6 my-3 list-disc" {...p} />
 );
+
+const Divider = () => (
+  <hr className="my-6 block border-b border-border dark:border-border-dark" />
+);
 const Wip = ({children}: {children: React.ReactNode}) => (
   <ExpandableCallout type="wip">{children}</ExpandableCallout>
 );
 const Pitfall = ({children}: {children: React.ReactNode}) => (
   <ExpandableCallout type="pitfall">{children}</ExpandableCallout>
 );
-
 const Note = ({children}: {children: React.ReactNode}) => (
   <ExpandableCallout type="note">{children}</ExpandableCallout>
 );
@@ -285,6 +290,57 @@ function IllustrationBlock({
   );
 }
 
+
+type NestedTocRoot = {
+  item: null;
+  children: Array<NestedTocNode>;
+};
+
+type NestedTocNode = {
+  item: TocItem;
+  children: Array<NestedTocNode>;
+};
+
+function calculateNestedToc(toc: Toc): NestedTocRoot {
+  const currentAncestors = new Map<number, NestedTocNode | NestedTocRoot>();
+  const root: NestedTocRoot = {
+    item: null,
+    children: [],
+  };
+  const startIndex = 1; // Skip "Overview"
+  for (let i = startIndex; i < toc.length; i++) {
+    const item = toc[i];
+    const currentParent: NestedTocNode | NestedTocRoot =
+      currentAncestors.get(item.depth - 1) || root;
+    const node: NestedTocNode = {
+      item,
+      children: [],
+    };
+    currentParent.children.push(node);
+    currentAncestors.set(item.depth, node);
+  }
+  return root;
+}
+
+function InlineToc() {
+  const toc = useContext(TocContext);
+  const root = useMemo(() => calculateNestedToc(toc), [toc]);
+  return <InlineTocItem items={root.children} />;
+}
+
+function InlineTocItem({items}: {items: Array<NestedTocNode>}) {
+  return (
+    <UL>
+      {items.map((node) => (
+        <LI key={node.item.url}>
+          <Link href={node.item.url}>{node.item.text}</Link>
+          {node.children.length > 0 && <InlineTocItem items={node.children} />}
+        </LI>
+      ))}
+    </UL>
+  );
+}
+
 export const MDXComponents = {
   p: P,
   blockquote: Blockquote,
@@ -294,6 +350,7 @@ export const MDXComponents = {
   h2: H2,
   h3: H3,
   h4: H4,
+  hr: Divider,
   a: LinkWithTodo,
   code: InlineCode,
   pre: CodeBlock,
@@ -318,6 +375,7 @@ export const MDXComponents = {
   Illustration,
   IllustrationBlock,
   Intro,
+  InlineToc,
   LearnMore,
   Math,
   MathI,
