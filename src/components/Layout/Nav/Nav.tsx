@@ -21,6 +21,7 @@ import {SidebarRouteTree} from '../Sidebar/SidebarRouteTree';
 import type {RouteItem} from '../useRouteMeta';
 import sidebarHome from '../../../sidebarHome.json';
 import sidebarLearn from '../../../sidebarLearn.json';
+import sidebarReference from '../../../sidebarReference.json';
 
 declare global {
   interface Window {
@@ -118,6 +119,9 @@ export default function Nav() {
         break;
       case 'learn':
         routeTree = sidebarLearn as RouteItem;
+        break;
+      case 'apis':
+        routeTree = sidebarReference as RouteItem;
         break;
     }
   }
