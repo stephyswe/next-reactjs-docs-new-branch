@@ -28,6 +28,7 @@ function wrapChildrenInMaxWidthContainers(children) {
     'Illustration',
     'IllustrationBlock',
     'Challenges',
+    'Recipes',
   ];
   let wrapQueue = [];
   let finalChildren = [];

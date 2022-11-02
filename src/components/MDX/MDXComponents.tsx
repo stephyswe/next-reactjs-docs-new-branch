@@ -175,6 +175,11 @@ function LinkWithTodo({href, children, ...props}: JSX.IntrinsicElements['a']) {
   );
 }
 
+// TODO: typing.
+function Recipes(props: any) {
+  return <Challenges {...props} isRecipes={true} />;
+}
+
 function AuthorCredit({
   author = 'Rachel Lee Nabors',
   authorLink = 'http://rachelnabors.com/',
@@ -386,6 +391,7 @@ export const MDXComponents = {
   Note,
   PackageImport,
   Recap,
+  Recipes,
   Sandpack,
   TerminalBlock,
   YouWillLearn,
